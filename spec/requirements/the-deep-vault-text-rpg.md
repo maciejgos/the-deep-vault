@@ -43,21 +43,21 @@ The raw narrative direction in `notes.md` defines a sealed underground habitat, 
 - Branching must be variable-driven enough to support faction trust, character states, progress flags, player resources, and final route selection.
 - The story should include Vault-9, Tomas Vale, the main cast, five major zones, the survival doctrine, hidden records, Black Levels, Boundary Ring evidence, and four endings unless human review changes the scope.
 - The initial target content scope from the raw notes is 22 main scenes, 8 side quests, 10 major NPCs, 20 locations, 12 key items, 15-20 global flags, 4 trust systems, and 3-5 resource meters.
+- The first feature target should be a complete-game MVP that supports a full beginning-to-end playthrough with the core narrative, systems, route selection, and endings represented at MVP depth.
 - Player-facing choices should repeatedly express conceal vs reveal, caution vs escalation, survival vs idealism, individual loyalty vs public truth, and reform vs revolution vs continuity vs exit.
 - The experience should preserve ambiguity around Voss and the Stability Office by presenting their continuity argument without absolving abuse, manipulation, disappearance, or coercion.
-- The requirement remains Draft until a human explicitly approves it.
 
 ## Assumptions
 
 - `spec/requirements/notes.md` is raw requirements input rather than the final approved requirement.
-- The first implementation target will likely be a vertical slice covering the Prologue and Act I, but that sequencing belongs in future feature, story, design, or ExecPlan work.
+- The first implementation target is a complete-game MVP rather than a vertical slice; future feature, story, design, and ExecPlan work should slice delivery internally while preserving full-game MVP scope.
 - The product may eventually need structured content definitions for scenes, dialogue, variables, locations, items, and endings, but those are out of scope for this requirement artifact.
 - Accessibility expectations, platform targets, save-slot behavior, content warnings, and localization needs have not been decided yet.
 
 ## Risks
 
 - The raw content package is already detailed enough to bias implementation before the product requirement is approved.
-- The intended 5-7 hour playthrough and four-ending scope may be too large for an initial release unless feature shaping intentionally slices the work.
+- The complete-game MVP scope may be too large for a first implementation pass unless story breakdown and execution planning create internal milestones that still lead to an end-to-end playable game.
 - Moral routes could feel cosmetic if faction trust, evidence, repairs, and character states do not materially change outcomes.
 - The sealed-society premise needs careful originality review so mood inspiration does not drift into derivative worldbuilding.
 - Heavy branching may make validation difficult unless future design defines state coverage, route eligibility, and ending test fixtures.
@@ -72,15 +72,14 @@ The raw narrative direction in `notes.md` defines a sealed underground habitat, 
 - Given the game centers on a sealed society with curated lies, when core scenes reveal hidden records, false public data, inhabited lower levels, manipulated exterior feeds, or exile practices, then each reveal should add usable evidence or meaningful pressure rather than serving only as flavor text.
 - Given the protagonist is a low-ranking maintenance runner, when progression opens new areas or information, then access should come through maintenance competence, relationships, evidence, choices, or system failures rather than unexplained special status.
 - Given a route involves public disclosure or suppression, when the player reaches the climax, then prior support from Mechanical, Stability, Keepers, Descenders, and key NPCs should visibly alter crisis handling or consequences.
-- Given future implementation work begins, when scope is sliced into features or stories, then the first deliverable can be validated independently without requiring all 22 scenes, 8 side quests, and 4 endings at once.
-- Given the requirement remains Draft, when Codex or a subagent recommends readiness, then no artifact status is changed to Approved without explicit human approval.
+- Given future implementation work begins, when scope is sliced into stories or execution milestones, then each slice should contribute to a complete-game MVP rather than redefining the first product target as a vertical slice only.
+- Given Codex or a subagent recommends readiness for any downstream artifact, when artifact status or checkpoint state changes, then no requirement, feature, story, design, plan, validation result, or release decision is marked approved without explicit human approval.
 
 ## Open Questions
 
 - Which platform and runtime should the first playable version target: browser, terminal, desktop app, mobile, or another surface?
-- Should the first product slice be the Prologue plus Act I vertical slice, or should feature shaping begin with a smaller engine/content prototype?
 - What level of content warnings, safety review, or sensitivity review is expected for coercion, disappearance, family separation, exile, and civil unrest themes?
-- Are the target playtime and content volume mandatory for the first complete release, or aspirational for the full narrative vision?
+- For the complete-game MVP, which raw-note content is mandatory at full depth, which can be represented at MVP depth, and which can be deferred without breaking the complete playthrough?
 - Should save/load include multiple slots, autosave, rewind, chapter replay, or only manual saves?
 - Should faction trust and resource meters be visible to the player, partially hinted through prose, or hidden until endings?
 - How much randomness, if any, is acceptable in crisis outcomes, resource checks, or route availability?
