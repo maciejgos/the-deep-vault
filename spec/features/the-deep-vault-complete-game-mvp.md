@@ -78,11 +78,20 @@ This feature is justified by the accepted requirement goals for a choice-based t
 - Given the player reviews their current situation, when they open the quest log, codex, or equivalent record, then they can identify active objectives, gathered evidence, important discoveries, and unresolved questions.
 - Given the complete-game MVP includes side content at MVP depth, when the player completes or skips that content, then it can influence trust, evidence, resources, character outcomes, or route context without being required for every ending.
 - Given human reviewers compare the feature to the accepted requirement, when they inspect scope and out-of-scope boundaries, then they can confirm the feature targets a complete-game MVP rather than a vertical slice.
-- Given this feature remains Draft, when Codex recommends readiness, then the status is not changed to Approved without explicit human approval.
+- Given downstream stories remain Draft, when Codex recommends readiness, then story status is not changed to Approved without explicit human approval.
 
 ## Related Stories
 
-None yet. Stories should be created only after human approval or explicit instruction to continue to story breakdown.
+- [Story: MVP Playthrough Spine](../stories/mvp-playthrough-spine.md)
+- [Story: Menu Choice Scene Flow](../stories/menu-choice-scene-flow.md)
+- [Story: Story State and Choice Consequences](../stories/story-state-choice-consequences.md)
+- [Story: Evidence, Codex, and Quest Records](../stories/evidence-codex-and-quest-records.md)
+- [Story: Vault Zones and Access Progression](../stories/vault-zones-access-progression.md)
+- [Story: Faction Trust and Character Arcs](../stories/faction-trust-and-character-arcs.md)
+- [Story: MVP Side Content Consequences](../stories/mvp-side-content-consequences.md)
+- [Story: Route Commitment and Ending Evaluation](../stories/route-commitment-and-ending-evaluation.md)
+- [Story: Save and Load Playthrough Continuity](../stories/save-load-playthrough-continuity.md)
+- [Story: MVP Content Scope and Deferral Map](../stories/mvp-content-scope-and-deferral-map.md)
 
 ## Related Artifacts
 
