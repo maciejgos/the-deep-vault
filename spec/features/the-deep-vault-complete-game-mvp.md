@@ -97,3 +97,4 @@ This feature is justified by the accepted requirement goals for a choice-based t
 
 - [Feature template](TEMPLATE.md)
 - [Requirements template](../requirements/TEMPLATE.md)
+- [Design: The Deep Vault MVP Game Architecture](../design/the-deep-vault-mvp-game-architecture.md)
