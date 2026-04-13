@@ -25,7 +25,7 @@ The implementation target is a static, client-side React application. There is n
 - [x] (2026-04-13 Europe/Warsaw) Created the first playable content path through the engine for Milestone 3. Added TypeScript content modules for P1 Survival Notice, A1 Pressure Fault, B-17 signal, a temporary route endpoint, B-17 evidence, records, locations, factions, characters, item metadata, and a full-exposure preview route fixture. This proves the engine-driven path and does not reduce the later full MVP content scope.
 - [x] (2026-04-13 Europe/Warsaw) Added MVP-depth content coverage for all mandatory rows in the accepted content scope map: 22 main scenes, 4 endings, 8 side quests, 10 NPCs, 20 locations, 12 key items, required flags, 4 trust systems, character states, and required resources. Added content tests that fail if mandatory records or consequence effects are missing.
 - [x] (2026-04-13 Europe/Warsaw) Implemented full route commitment, deterministic route fixture execution, route signal scoring, and save/load continuity coverage. Added fixture helpers and tests proving all four route fixtures reach matching endings and can save/load at mid-route before continuing with preserved choices, evidence, quests, route progress, and ending outcomes.
-- [ ] Add Playwright browser tests for all four endings, save/load browser continuity, and screenshot evidence.
+- [x] (2026-04-13 Europe/Warsaw) Added Playwright browser tests for all four ending routes, keyboard-reachable menu play, browser save/load continuity, record preservation, and ending screenshot attachment evidence for the full-exposure route.
 - [ ] Update repository setup documentation and create validation evidence under `spec/validation/`.
 
 ## Surprises & Discoveries
@@ -77,6 +77,8 @@ The implementation target is a static, client-side React application. There is n
 2026-04-13 update: Milestone 5 is implemented. The repository now contains lean MVP-depth content records for all mandatory content scope map rows, plus validation tests that inspect actual scene choice effects for mandatory flags, side quest outcomes, trust systems, character states, and resources. Docker-based `pnpm validate` passed with 12 unit/content/component tests and 4 Playwright smoke tests across desktop and mobile projects.
 
 2026-04-13 update: Milestone 6 is implemented. The route evaluator now scores accumulated route signals from evidence, faction trust, character states, public stability, pressure, resources, and key items, while still honoring explicit final route commitment. Route fixture helpers run scripted paths, and content tests save at mid-route, load, continue, and prove all four fixtures reach their matching endings. Docker-based `pnpm validate` passed with 14 unit/content/component tests and 4 Playwright smoke tests.
+
+2026-04-13 update: Milestone 7 is implemented. Playwright now derives browser route checks from the committed route fixtures and verifies keyboard entry, all four ending routes, browser save/load resume, record preservation, and a full-exposure ending screenshot attachment in the Playwright report. Docker-based `pnpm validate` passed with 14 unit/content/component tests and 12 Playwright browser tests across desktop and mobile projects.
 
 ## Context and Orientation
 

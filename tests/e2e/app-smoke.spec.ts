@@ -1,49 +1,83 @@
 import { expect, test, type Page } from "@playwright/test";
+import { gameContent } from "../../src/content";
 
-const fullExposurePath = [
-  "Begin the maintenance shift",
-  "Pull the raw B-17 sensor spool",
-  "Give Tovin enough truth to create doubt",
-  "Follow Mira's market trail",
-  "Take the paper schematics",
-  "Use Mira's locker mark",
-  "Accept Nera's archive seal",
-  "Trace the recycler ration numbers",
-  "Take the orchard route ledger",
-  "Open the Black Stair",
-  "Hear Cael's demand for full exposure",
-  "Keep Mira alive for the coalition",
-  "Copy the nursery records",
-  "Leave Tovin a path to help",
-  "Take Alma's raw boundary feed",
-  "Buy time without burying the proof",
-  "Hold the pumps and keep Brant alive",
-  "Take the continuity cipher",
-  "Give Cael the raw exposure route",
-  "Prepare the relay core",
-  "Spend the last resources to keep the route viable",
-  "Execute full exposure"
-];
+const choiceTextById = new Map(
+  Object.values(gameContent.scenes).flatMap((scene) => scene.choices.map((choice) => [choice.id, choice.text] as const))
+);
 
-test("opening scene is visible and menu based", async ({ page }) => {
+test("opening scene is visible, menu based, and keyboard reachable", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "P1. Survival Notice" })).toBeVisible();
   await expect(page.getByText(/Tomas Vale/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Begin the maintenance shift" })).toBeVisible();
+
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name: "A1. Pressure Fault" })).toBeVisible();
 });
 
-test("full exposure route endpoint is playable", async ({ page }) => {
+for (const fixture of Object.values(gameContent.routeFixtures)) {
+  test(`${fixture.routeId} route reaches matching ending`, async ({ page }, testInfo) => {
+    await page.goto("/");
+    await playFixture(page, fixture.choiceIds);
+
+    await expect(page.getByRole("heading", { name: "Ending Summary" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: routeTitle(fixture.routeId) })).toBeVisible();
+    await expect(page.getByText(fixture.routeId)).toBeVisible();
+
+    if (fixture.routeId === "full-exposure") {
+      await testInfo.attach("full-exposure-ending", {
+        body: await page.screenshot({ fullPage: true }),
+        contentType: "image/png"
+      });
+    }
+  });
+}
+
+test("browser save/load resumes a route and preserves records", async ({ page }) => {
+  const fixture = gameContent.routeFixtures["fixture.exit-protocol"];
+  const midpoint = Math.floor(fixture.choiceIds.length / 2);
+
   await page.goto("/");
-  await playChoices(page, fullExposurePath);
+  await playFixture(page, fixture.choiceIds.slice(0, midpoint));
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("status")).toContainText("Game saved.");
+
+  await page.reload();
+  await page.getByRole("button", { name: "Load" }).click();
+  await expect(page.getByRole("status")).toContainText("Game loaded.");
+
+  await playFixture(page, fixture.choiceIds.slice(midpoint));
 
   await expect(page.getByRole("heading", { name: "Ending Summary" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Exit Protocol" })).toBeVisible();
   await expect(page.getByText("B-17 Power Draw")).toBeVisible();
-  await expect(page.getByText("Full Exposure")).toBeVisible();
+  await expect(page.getByText("Trace B-17: active")).toBeVisible();
 });
 
-async function playChoices(page: Page, choiceNames: string[]) {
-  for (const choiceName of choiceNames) {
-    await page.getByRole("button", { name: choiceName }).click();
+async function playFixture(page: Page, choiceIds: string[]) {
+  for (const choiceId of choiceIds) {
+    const choiceText = choiceTextById.get(choiceId);
+    if (!choiceText) {
+      throw new Error(`Missing choice text for ${choiceId}`);
+    }
+
+    await page.getByRole("button", { name: choiceText }).click();
+  }
+}
+
+function routeTitle(routeId: string) {
+  switch (routeId) {
+    case "controlled-truth":
+      return "Controlled Truth";
+    case "full-exposure":
+      return "Full Exposure";
+    case "preserve-order":
+      return "Preserve Order";
+    case "exit-protocol":
+      return "Exit Protocol";
+    default:
+      throw new Error(`Unknown route ${routeId}`);
   }
 }
