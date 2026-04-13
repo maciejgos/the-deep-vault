@@ -1,7 +1,19 @@
 import { evaluateConditions } from "./conditions";
 import { applyEffects, moveToScene } from "./effects";
+import { createInitialState } from "./initialState";
 import { getCurrentScene } from "./selectors";
 import type { ChoiceId, GameContent, GameState } from "./types";
+
+export function startNewGame(content: GameContent): GameState {
+  const initialState = createInitialState(content.startSceneId);
+  const startScene = content.scenes[content.startSceneId];
+
+  if (!startScene) {
+    throw new Error(`Start scene does not exist: ${content.startSceneId}`);
+  }
+
+  return applyEffects(initialState, startScene.entryEffects, startScene.id);
+}
 
 export function applyChoice(content: GameContent, state: GameState, choiceId: ChoiceId): GameState {
   const scene = getCurrentScene(content, state);
@@ -33,4 +45,3 @@ export function applyChoice(content: GameContent, state: GameState, choiceId: Ch
 
   return nextState;
 }
-

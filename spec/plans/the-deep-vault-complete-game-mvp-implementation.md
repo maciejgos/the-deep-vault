@@ -21,7 +21,7 @@ The implementation target is a static, client-side React application. There is n
 - [x] (2026-04-13 Europe/Warsaw) Created and switched to branch `codex/deep-vault-complete-game-mvp`.
 - [x] (2026-04-13 Europe/Warsaw) Added reproducible Node.js 24, pnpm, Vite, React, TypeScript, TailwindCSS, Docker, and Dev Container tooling. Generated `pnpm-lock.yaml`, added the Vite app shell, initial Vitest and Playwright smoke tests, Docker Compose, Dev Container setup, command documentation, and passed the Docker-based validation chain.
 - [x] (2026-04-13 Europe/Warsaw) Built the typed game model, Zod schema validation, deterministic condition/effect engine, scene selectors, route evaluator, localStorage save/load layer, and content graph validator. Added unit coverage for invalid content, deterministic conditions/effects, scene transitions, route evaluation, and save/load success and failure cases.
-- [ ] Implement the React player interface for scene text, choices, quest/evidence/codex records, save/load, and ending summaries.
+- [x] (2026-04-13 Europe/Warsaw) Implemented the React player interface for engine-backed scene text, menu choices, quest/evidence/codex records, status summary, local save/load controls, and ending route preview. Added component coverage for opening render and first route path, and expanded Playwright smoke coverage for the first route endpoint on desktop and mobile.
 - [x] (2026-04-13 Europe/Warsaw) Created the first playable content path through the engine for Milestone 3. Added TypeScript content modules for P1 Survival Notice, A1 Pressure Fault, B-17 signal, a temporary route endpoint, B-17 evidence, records, locations, factions, characters, item metadata, and a full-exposure preview route fixture. This proves the engine-driven path and does not reduce the later full MVP content scope.
 - [ ] Add MVP content for all mandatory scenes, endings, side content, NPCs, locations, key items, flags, trust systems, and resources from the content scope map.
 - [ ] Add unit tests, content validation tests, route fixtures, save/load tests, and Playwright browser tests.
@@ -70,6 +70,8 @@ The implementation target is a static, client-side React application. There is n
 2026-04-13 update: Milestone 2 is implemented. The repository now contains the initial `src/game/` foundation for serializable game state, structured content contracts, constrained condition and effect vocabularies, deterministic scene transitions, route scoring and ending selection, content graph validation, and single-slot localStorage save/load. Docker-based `pnpm validate` passed with 7 unit tests and 2 Playwright smoke tests.
 
 2026-04-13 update: Milestone 3 is implemented. The repository now contains `src/content/` modules and `tests/content/first-path.test.ts` proving a scripted path from `P1. Survival Notice` through `A1. Pressure Fault`, B-17 evidence collection, and a temporary full-exposure endpoint. Docker-based `pnpm validate` passed with 9 unit/content tests and 2 Playwright smoke tests.
+
+2026-04-13 update: Milestone 4 is implemented. The static placeholder UI was replaced with React components backed by `src/game/` and `src/content/`, including scene rendering, choices, records, status, save/load controls, and ending preview. Docker-based `pnpm validate` passed with 10 unit/content/component tests and 4 Playwright smoke tests across desktop and mobile projects.
 
 ## Context and Orientation
 
