@@ -22,6 +22,7 @@ The implementation target is a static, client-side React application. There is n
 - [x] (2026-04-13 Europe/Warsaw) Added reproducible Node.js 24, pnpm, Vite, React, TypeScript, TailwindCSS, Docker, and Dev Container tooling. Generated `pnpm-lock.yaml`, added the Vite app shell, initial Vitest and Playwright smoke tests, Docker Compose, Dev Container setup, command documentation, and passed the Docker-based validation chain.
 - [x] (2026-04-13 Europe/Warsaw) Built the typed game model, Zod schema validation, deterministic condition/effect engine, scene selectors, route evaluator, localStorage save/load layer, and content graph validator. Added unit coverage for invalid content, deterministic conditions/effects, scene transitions, route evaluation, and save/load success and failure cases.
 - [ ] Implement the React player interface for scene text, choices, quest/evidence/codex records, save/load, and ending summaries.
+- [x] (2026-04-13 Europe/Warsaw) Created the first playable content path through the engine for Milestone 3. Added TypeScript content modules for P1 Survival Notice, A1 Pressure Fault, B-17 signal, a temporary route endpoint, B-17 evidence, records, locations, factions, characters, item metadata, and a full-exposure preview route fixture. This proves the engine-driven path and does not reduce the later full MVP content scope.
 - [ ] Add MVP content for all mandatory scenes, endings, side content, NPCs, locations, key items, flags, trust systems, and resources from the content scope map.
 - [ ] Add unit tests, content validation tests, route fixtures, save/load tests, and Playwright browser tests.
 - [ ] Update repository setup documentation and create validation evidence under `spec/validation/`.
@@ -67,6 +68,8 @@ The implementation target is a static, client-side React application. There is n
 2026-04-13 update: Milestone 1 is implemented. The repository now contains a Vite React TypeScript scaffold, pnpm lockfile, TailwindCSS and ESLint configuration, initial UI smoke tests, Docker Compose and Dev Container definitions, Playwright browser setup, and updated command documentation. Host-native validation remains unavailable until host Node/pnpm are installed, but Docker-based validation passed with `docker compose run --rm workspace pnpm install --frozen-lockfile` and `docker compose run --rm workspace pnpm validate`.
 
 2026-04-13 update: Milestone 2 is implemented. The repository now contains the initial `src/game/` foundation for serializable game state, structured content contracts, constrained condition and effect vocabularies, deterministic scene transitions, route scoring and ending selection, content graph validation, and single-slot localStorage save/load. Docker-based `pnpm validate` passed with 7 unit tests and 2 Playwright smoke tests.
+
+2026-04-13 update: Milestone 3 is implemented. The repository now contains `src/content/` modules and `tests/content/first-path.test.ts` proving a scripted path from `P1. Survival Notice` through `A1. Pressure Fault`, B-17 evidence collection, and a temporary full-exposure endpoint. Docker-based `pnpm validate` passed with 9 unit/content tests and 2 Playwright smoke tests.
 
 ## Context and Orientation
 
