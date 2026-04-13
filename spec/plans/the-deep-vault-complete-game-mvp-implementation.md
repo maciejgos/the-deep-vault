@@ -26,7 +26,7 @@ The implementation target is a static, client-side React application. There is n
 - [x] (2026-04-13 Europe/Warsaw) Added MVP-depth content coverage for all mandatory rows in the accepted content scope map: 22 main scenes, 4 endings, 8 side quests, 10 NPCs, 20 locations, 12 key items, required flags, 4 trust systems, character states, and required resources. Added content tests that fail if mandatory records or consequence effects are missing.
 - [x] (2026-04-13 Europe/Warsaw) Implemented full route commitment, deterministic route fixture execution, route signal scoring, and save/load continuity coverage. Added fixture helpers and tests proving all four route fixtures reach matching endings and can save/load at mid-route before continuing with preserved choices, evidence, quests, route progress, and ending outcomes.
 - [x] (2026-04-13 Europe/Warsaw) Added Playwright browser tests for all four ending routes, keyboard-reachable menu play, browser save/load continuity, record preservation, and ending screenshot attachment evidence for the full-exposure route.
-- [ ] Update repository setup documentation and create validation evidence under `spec/validation/`.
+- [x] (2026-04-13 Europe/Warsaw) Created validation evidence under `spec/validation/the-deep-vault-complete-game-mvp-implementation-validation.md`, mapping implementation evidence back to the requirement, feature, stories, design, ADRs, ExecPlan, automated checks, Playwright browser evidence, missing checks, and future gates. Result is `Ready for human review`; human decision remains pending.
 
 ## Surprises & Discoveries
 
@@ -79,6 +79,8 @@ The implementation target is a static, client-side React application. There is n
 2026-04-13 update: Milestone 6 is implemented. The route evaluator now scores accumulated route signals from evidence, faction trust, character states, public stability, pressure, resources, and key items, while still honoring explicit final route commitment. Route fixture helpers run scripted paths, and content tests save at mid-route, load, continue, and prove all four fixtures reach their matching endings. Docker-based `pnpm validate` passed with 14 unit/content/component tests and 4 Playwright smoke tests.
 
 2026-04-13 update: Milestone 7 is implemented. Playwright now derives browser route checks from the committed route fixtures and verifies keyboard entry, all four ending routes, browser save/load resume, record preservation, and a full-exposure ending screenshot attachment in the Playwright report. Docker-based `pnpm validate` passed with 14 unit/content/component tests and 12 Playwright browser tests across desktop and mobile projects.
+
+2026-04-13 update: Milestone 8 is implemented. Validation evidence was recorded in `spec/validation/the-deep-vault-complete-game-mvp-implementation-validation.md` with result `Ready for human review`. The validation maps implementation evidence to accepted PDLC artifacts, records passed Docker validation, identifies missing host-native and CI checks, and keeps human acceptance pending.
 
 ## Context and Orientation
 
