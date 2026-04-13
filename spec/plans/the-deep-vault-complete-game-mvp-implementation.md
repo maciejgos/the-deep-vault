@@ -20,7 +20,7 @@ The implementation target is a static, client-side React application. There is n
 - [x] (2026-04-13 Europe/Warsaw) Human explicitly requested implementation execution and the ExecPlan status was `Accepted`.
 - [x] (2026-04-13 Europe/Warsaw) Created and switched to branch `codex/deep-vault-complete-game-mvp`.
 - [x] (2026-04-13 Europe/Warsaw) Added reproducible Node.js 24, pnpm, Vite, React, TypeScript, TailwindCSS, Docker, and Dev Container tooling. Generated `pnpm-lock.yaml`, added the Vite app shell, initial Vitest and Playwright smoke tests, Docker Compose, Dev Container setup, command documentation, and passed the Docker-based validation chain.
-- [ ] Build the typed game model, schema validation, deterministic engine, save/load layer, and content graph validator.
+- [x] (2026-04-13 Europe/Warsaw) Built the typed game model, Zod schema validation, deterministic condition/effect engine, scene selectors, route evaluator, localStorage save/load layer, and content graph validator. Added unit coverage for invalid content, deterministic conditions/effects, scene transitions, route evaluation, and save/load success and failure cases.
 - [ ] Implement the React player interface for scene text, choices, quest/evidence/codex records, save/load, and ending summaries.
 - [ ] Add MVP content for all mandatory scenes, endings, side content, NPCs, locations, key items, flags, trust systems, and resources from the content scope map.
 - [ ] Add unit tests, content validation tests, route fixtures, save/load tests, and Playwright browser tests.
@@ -38,6 +38,8 @@ The implementation target is a static, client-side React application. There is n
   Evidence: `docker images` succeeded after approval, `docker compose build workspace` succeeded, and `docker compose run --rm workspace pnpm validate` passed.
 - Observation: Playwright needed explicit browser and system dependency setup in the container.
   Evidence: The first `pnpm test:e2e` run failed because Chromium was missing from the Playwright cache. The fix added `pnpm test:e2e:setup`, `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright`, an `ms-playwright` Docker volume, and Playwright system dependencies in `.devcontainer/Dockerfile`.
+- Observation: Zod `record` schemas do not support `.partial()` in the installed Zod version.
+  Evidence: The first Milestone 2 unit run failed with `TypeError: z.record(...).partial is not a function`; `routeProgress` validation was corrected to a route-keyed numeric record.
 
 ## Decision Log
 
@@ -63,6 +65,8 @@ The implementation target is a static, client-side React application. There is n
 ## Outcomes & Retrospective
 
 2026-04-13 update: Milestone 1 is implemented. The repository now contains a Vite React TypeScript scaffold, pnpm lockfile, TailwindCSS and ESLint configuration, initial UI smoke tests, Docker Compose and Dev Container definitions, Playwright browser setup, and updated command documentation. Host-native validation remains unavailable until host Node/pnpm are installed, but Docker-based validation passed with `docker compose run --rm workspace pnpm install --frozen-lockfile` and `docker compose run --rm workspace pnpm validate`.
+
+2026-04-13 update: Milestone 2 is implemented. The repository now contains the initial `src/game/` foundation for serializable game state, structured content contracts, constrained condition and effect vocabularies, deterministic scene transitions, route scoring and ending selection, content graph validation, and single-slot localStorage save/load. Docker-based `pnpm validate` passed with 7 unit tests and 2 Playwright smoke tests.
 
 ## Context and Orientation
 
