@@ -23,19 +23,25 @@ Keep generated output, caches, and dependency folders out of version control. Ad
 
 ## Build, Test, and Development Commands
 
-No package manager or build system is committed yet because this is currently a workflow template. When implementation tooling is added, document exact commands here. Expected examples:
+The Deep Vault MVP uses Node.js 24 LTS, pnpm, Vite, React, TypeScript, TailwindCSS, Vitest, Playwright, Docker, and Dev Containers.
 
-- `npm install` or equivalent: install dependencies.
-- `npm run dev`: start a local development process.
-- `npm run build`: produce a production build or packaged plugin artifact.
-- `npm test`: run the default test suite.
-- `npm run lint`: check formatting and static-analysis rules.
+- `pnpm install --frozen-lockfile`: install dependencies from the committed lockfile.
+- `pnpm dev`: start the Vite development server at `http://localhost:5173`.
+- `pnpm build`: typecheck and produce the static Cloudflare Pages build in `dist/`.
+- `pnpm lint`: run ESLint.
+- `pnpm test`: run the default unit test suite.
+- `pnpm test:unit`: run Vitest unit tests.
+- `pnpm test:content`: run content validation tests once content modules exist.
+- `pnpm test:e2e`: run Playwright end-to-end tests.
+- `pnpm validate`: run lint, unit tests, content tests, build, and Playwright checks.
+- `docker compose run --rm workspace pnpm install --frozen-lockfile`: install inside the planned container workspace.
+- `docker compose run --rm workspace pnpm validate`: run validation inside the planned container workspace.
 
-Do not add setup steps that cannot be reproduced from committed files.
+Do not add setup steps that cannot be reproduced from committed files. If dependency installation or Playwright browser setup needs network access, request approval through the command escalation flow.
 
 ## Coding Style & Naming Conventions
 
-Follow project tooling once it exists. Until then, use 2-space indentation for JavaScript, TypeScript, JSON, and Markdown. Prefer `camelCase` for variables and functions, `PascalCase` for classes and components, and `kebab-case` for filenames unless a framework requires otherwise.
+Follow the committed TypeScript, ESLint, Vite, and TailwindCSS tooling. Use 2-space indentation for JavaScript, TypeScript, JSON, and Markdown. Prefer `camelCase` for variables and functions, `PascalCase` for classes and components, and `kebab-case` for filenames unless a framework requires otherwise.
 
 Keep modules focused. Avoid large utility files; group shared helpers under `src/lib/` or `src/utils/` when needed.
 

@@ -213,4 +213,25 @@ Follow-up routing:
 
 ## Current Status
 
-No package manager, build system, or product runtime is committed yet. When tooling is introduced, document the exact setup, build, test, and development commands in `AGENTS.md` and this README.
+The first product runtime scaffold is present for The Deep Vault MVP. It is a browser-first React, TypeScript, TailwindCSS, and Vite app planned for static Cloudflare Pages hosting.
+
+Local commands:
+
+- `pnpm install --frozen-lockfile`: install dependencies after `pnpm-lock.yaml` is generated.
+- `pnpm dev`: start the Vite development server at `http://localhost:5173`.
+- `pnpm build`: typecheck and build static output into `dist/`.
+- `pnpm lint`: run ESLint.
+- `pnpm test`: run the unit test suite.
+- `pnpm test:unit`: run Vitest unit tests.
+- `pnpm test:content`: run content validation tests once content modules exist.
+- `pnpm test:e2e:setup`: install Playwright Chromium and required system dependencies.
+- `pnpm test:e2e`: run Playwright browser tests.
+- `pnpm validate`: run the full local validation chain.
+
+Container commands:
+
+- `docker compose run --rm workspace pnpm install --frozen-lockfile`
+- `docker compose run --rm workspace pnpm test:e2e:setup`
+- `docker compose run --rm workspace pnpm validate`
+
+The current host environment used during scaffolding did not have `node` or `pnpm` installed. Docker-based dependency installation, lockfile generation, lint, unit tests, content-test placeholder, and production build passed. Playwright browser tests require `pnpm test:e2e:setup` before the first run in a new environment.

@@ -1,0 +1,21 @@
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+      - pnpm-store:/pnpm/store
+      - ms-playwright:/ms-playwright
+    command: sleep infinity
+    environment:
+      PNPM_HOME: /pnpm
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    ports:
+      - "5173:5173"
+      - "4173:4173"
+
+volumes:
+  pnpm-store:
+  ms-playwright:
