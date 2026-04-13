@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready with accepted risks
+Accepted
 
 ## Release Scope
 
