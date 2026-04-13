@@ -20,6 +20,7 @@ Validate that the solution design for The Deep Vault complete-game MVP is tracea
 - [ADR: No Server-Side Database for MVP](../architecture-records/no-server-side-database-for-mvp.md)
 - [ADR: Local-First Save and Load Persistence](../architecture-records/local-first-save-and-load-persistence.md)
 - [ADR: Cloudflare Pages Static Hosting for MVP](../architecture-records/cloudflare-pages-static-hosting-for-mvp.md)
+- [ExecPlan: Implement The Deep Vault Complete Game MVP](../plans/the-deep-vault-complete-game-mvp-implementation.md)
 
 ## Preconditions
 

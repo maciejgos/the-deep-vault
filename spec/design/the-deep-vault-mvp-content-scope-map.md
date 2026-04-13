@@ -211,4 +211,5 @@ All 20 raw-note locations are mandatory at MVP depth because they anchor the mai
 ## Related Artifacts
 
 - [Design: The Deep Vault MVP Game Architecture](the-deep-vault-mvp-game-architecture.md)
+- [ExecPlan: Implement The Deep Vault Complete Game MVP](../plans/the-deep-vault-complete-game-mvp-implementation.md)
 - [Validation: The Deep Vault MVP Design Validation](../validation/the-deep-vault-mvp-design-validation.md)

@@ -306,4 +306,5 @@ Future CI/CD or lifecycle gates:
 - [ADR: Local-First Save and Load Persistence](../architecture-records/local-first-save-and-load-persistence.md)
 - [ADR: Cloudflare Pages Static Hosting for MVP](../architecture-records/cloudflare-pages-static-hosting-for-mvp.md)
 - [Design: The Deep Vault MVP Content Scope Map](the-deep-vault-mvp-content-scope-map.md)
+- [ExecPlan: Implement The Deep Vault Complete Game MVP](../plans/the-deep-vault-complete-game-mvp-implementation.md)
 - [Validation: The Deep Vault MVP Design Validation](../validation/the-deep-vault-mvp-design-validation.md)
