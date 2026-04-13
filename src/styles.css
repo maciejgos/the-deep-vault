@@ -28,9 +28,10 @@ button {
   padding: 24px;
   color: #f5f7f4;
   background:
-    linear-gradient(rgba(24, 32, 28, 0.82), rgba(24, 32, 28, 0.94)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80")
-      center / cover;
+    radial-gradient(circle at 50% 22%, rgba(117, 242, 206, 0.18), transparent 34%),
+    linear-gradient(90deg, rgba(5, 7, 6, 0.82), rgba(12, 18, 17, 0.58) 48%, rgba(5, 7, 6, 0.86)),
+    linear-gradient(rgba(6, 8, 7, 0.56), rgba(6, 8, 7, 0.88)),
+    url("./assets/vault-9-background.svg") center / cover fixed;
 }
 
 .play-surface {
