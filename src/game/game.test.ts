@@ -9,6 +9,7 @@ import {
   getAvailableChoices,
   getCurrentScene,
   loadGame,
+  runRouteChoices,
   saveGame,
   validateContentGraph,
   type GameContent,
@@ -172,6 +173,12 @@ describe("game foundation", () => {
     expect(evaluateEnding(content, committedState).routeId).toBe("full-exposure");
   });
 
+  it("can infer an ending from accumulated route signals without a final route", () => {
+    const signaledState = runRouteChoices(content, ["choice.inspect"]);
+
+    expect(evaluateEnding(content, signaledState).ending?.id).toBe("ending.full-exposure");
+  });
+
   it("saves and loads validated state from one local slot", () => {
     const storage = createMemoryStorage();
     const state = applyChoice(content, createInitialState(content.startSceneId), "choice.inspect");
@@ -208,4 +215,3 @@ function createMemoryStorage(): StorageLike {
     setItem: (key, value) => values.set(key, value)
   };
 }
-

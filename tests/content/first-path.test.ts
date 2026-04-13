@@ -11,7 +11,17 @@ import {
   mandatoryResourceNames,
   mandatorySideQuestIds
 } from "../../src/content";
-import { applyChoice, createInitialState, evaluateEnding, validateContentGraph, type Effect } from "../../src/game";
+import {
+  createInitialState,
+  evaluateEnding,
+  loadGame,
+  runRouteChoices,
+  runRouteFixture,
+  saveGame,
+  validateContentGraph,
+  type Effect,
+  type StorageLike
+} from "../../src/game";
 
 describe("MVP content coverage", () => {
   it("validates the content graph", () => {
@@ -72,14 +82,34 @@ describe("MVP content coverage", () => {
 
   it("plays each route fixture to its matching ending", () => {
     for (const fixture of Object.values(gameContent.routeFixtures)) {
-      let state = createInitialState(gameContent.startSceneId);
-
-      for (const choiceId of fixture.choiceIds) {
-        state = applyChoice(gameContent, state, choiceId);
-      }
+      const { state } = runRouteFixture(gameContent, fixture.id);
 
       expect(state.currentSceneId).toBe("scene.ending.summary");
       expect(evaluateEnding(gameContent, state).ending?.routeId).toBe(fixture.routeId);
+    }
+  });
+
+  it("preserves route progress and major state when saved at mid-route and resumed", () => {
+    for (const fixture of Object.values(gameContent.routeFixtures)) {
+      const midpoint = Math.floor(fixture.choiceIds.length / 2);
+      const beforeSave = runRouteChoices(gameContent, fixture.choiceIds.slice(0, midpoint));
+      const storage = createMemoryStorage();
+
+      const saveResult = saveGame(beforeSave, storage, "2026-04-13T15:00:00.000Z");
+      expect(saveResult.ok).toBe(true);
+
+      const loadResult = loadGame(storage);
+      expect(loadResult.ok).toBe(true);
+
+      const resumed = loadResult.ok
+        ? runRouteChoices(gameContent, fixture.choiceIds.slice(midpoint), loadResult.state)
+        : createInitialState(gameContent.startSceneId);
+
+      expect(resumed.currentSceneId).toBe("scene.ending.summary");
+      expect(resumed.selectedChoices).toHaveLength(fixture.choiceIds.length);
+      expect(resumed.evidenceIds).toEqual(expect.arrayContaining(["evidence.found-b17", "evidence.paper-schematics"]));
+      expect(resumed.questStates["quest.broadcast"]?.status).toBe("completed");
+      expect(evaluateEnding(gameContent, resumed).ending?.routeId).toBe(fixture.routeId);
     }
   });
 });
@@ -89,4 +119,13 @@ function collectEffects(): Effect[] {
     ...(scene.entryEffects ?? []),
     ...scene.choices.flatMap((choice) => choice.effects ?? [])
   ]);
+}
+
+function createMemoryStorage(): StorageLike {
+  const values = new Map<string, string>();
+
+  return {
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, value)
+  };
 }
