@@ -77,6 +77,62 @@ Open the app at:
 http://localhost:5173
 ```
 
+## Container Workflow
+
+Build the Docker workspace and install dependencies:
+
+```sh
+make setup
+```
+
+Start the game in a container:
+
+```sh
+make run
+```
+
+Open the app at:
+
+```text
+http://localhost:5173
+```
+
+Restart the containerized game server:
+
+```sh
+make restart
+```
+
+Follow container logs:
+
+```sh
+make logs
+```
+
+Print recent workspace logs without following:
+
+```sh
+make logs-once
+```
+
+Stop and clean up containers:
+
+```sh
+make cleanup
+```
+
+Remove containers plus Docker volumes used for pnpm and Playwright caches:
+
+```sh
+make clean-volumes
+```
+
+List all Makefile targets:
+
+```sh
+make help
+```
+
 ## Validation
 
 Run the default unit tests:
