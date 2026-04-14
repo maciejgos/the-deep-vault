@@ -1,3 +1,3 @@
-This directory will contain application source code once implementation begins.
+This directory contains The Deep Vault browser MVP application source code.
 
 Source-specific agent guidance belongs in `AGENTS.md`.

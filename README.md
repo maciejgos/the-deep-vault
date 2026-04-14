@@ -14,16 +14,18 @@ You play as Tomas Vale, a low-ranking maintenance runner whose routine work expo
 
 ## Current Build
 
-The current implementation is an MVP runtime for the opening path. It includes:
+The current implementation is a complete-game MVP at lean narrative depth. It includes:
 
 - A React and TypeScript game shell.
 - Menu-based scene progression.
 - Engine-driven choice effects and route evaluation.
 - Player-facing status, evidence, quest, faction, character, location, and item records.
 - Local browser save and load.
+- Authored MVP content covering 22 main scenes, 8 side quests, 10 major NPCs, 20 locations, 12 key items, 4 trust systems, and 4 endings.
+- Route fixtures for controlled truth, full exposure, preserve order, and exit protocol endings.
 - Unit, content, build, lint, and Playwright smoke-test coverage.
 
-The playable content currently proves the opening route through Tomas's maintenance fault, the B-17 contradiction, and a full-exposure preview ending. The broader complete-game MVP remains planned in the spec artifacts.
+The playable content now runs from Tomas's maintenance fault through route commitment and an ending panel. The prose and side content are intentionally MVP-depth, with expansion and polish tracked through the spec artifacts.
 
 ## Gameplay
 
@@ -186,4 +188,4 @@ The game scope and implementation rationale are documented in:
 - `spec/design/the-deep-vault-mvp-game-architecture.md`
 - `spec/plans/the-deep-vault-complete-game-mvp-implementation.md`
 
-These artifacts remain the source of truth for planned expansion beyond the current opening-path MVP.
+These artifacts remain the source of truth for future expansion, polish, validation gates, and deployment work beyond the complete-game MVP.
