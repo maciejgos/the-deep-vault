@@ -47,8 +47,8 @@ Turn approved design or story artifacts into a self-contained ExecPlan that a fr
 8. Define validation and recovery.
    Include test commands, manual checks, expected outputs, idempotence notes, and recovery steps. Distinguish checks that can run now from checks that require future tooling.
 
-9. Recommend subagent review when risk warrants it.
-   If the user explicitly asks for subagents, parallel review, or independent validation, use `execution_plan_reviewer` to review the ExecPlan for self-containment and executability. Use `architecture_decision_reviewer` for architecture risk and ADR coverage, and `validation_gate_reviewer` for validation and CI/CD gate readiness.
+9. Run required subagent review.
+   Before the human checkpoint, run `execution_plan_reviewer` against the draft ExecPlan for self-containment and executability. Use `architecture_decision_reviewer` for architecture risk and ADR coverage, and `validation_gate_reviewer` for validation and CI/CD gate readiness. Record findings in the ExecPlan `Subagent Review Checkpoints` section. If a reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
 
 ## ExecPlan Quality Bar
 
@@ -72,6 +72,7 @@ Every ExecPlan must contain and maintain:
 - `Surprises & Discoveries`
 - `Decision Log`
 - `Outcomes & Retrospective`
+- `Subagent Review Checkpoints`
 
 Initialize these sections even when the plan is brand new. Use `Draft` language until the human approves execution.
 
@@ -84,7 +85,7 @@ End execution-planning work by asking the human to approve or revise:
 - Concrete implementation steps
 - Validation and acceptance approach
 - Risks, assumptions, and recovery guidance
-- Whether subagent review is needed before implementation
+- Subagent review evidence and unresolved advisory findings before implementation
 - Whether Codex may begin implementation
 
 Do not move to `src/`, `tests/`, or CI/CD configuration until this checkpoint is approved or the user explicitly asks to continue.
@@ -100,4 +101,5 @@ When creating or updating an ExecPlan, provide:
 - A short summary of the implementation outcome.
 - Key risks or assumptions.
 - Validation commands or manual checks.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.

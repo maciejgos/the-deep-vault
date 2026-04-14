@@ -12,6 +12,21 @@ Describe the release, deployment, incident, feedback set, metric trend, or opera
 
 Link to related requirements, features, stories, designs, ADRs, ExecPlans, validation artifacts, release-readiness notes, or implementation changes.
 
+## Subagent Review Evidence
+
+- PDLC step: Lifecycle retrospective
+- Trigger: <Draft lifecycle retrospective ready for advisory review before human checkpoint>
+- Required `.codex/agents` reviewers: `lifecycle_learning_reviewer`
+- Additional risk-based reviewers: `product_coherence_reviewer`, `architecture_decision_reviewer`, `security_reviewer`, or `validation_gate_reviewer` depending on the learning.
+- Review status: <pending, running, completed, skipped, or unavailable>
+- Findings summary: <Advisory findings; not approval>
+- Evidence path: <Link to subagent output, validation note, or review artifact>
+- Unresolved gaps: <Open issues or none>
+- Human decision state: <Pending unless explicitly approved by a human>
+- Reason if skipped or unavailable: <Reason, or Not applicable>
+- Impact on confidence: <How missing or partial review affects confidence>
+- Human decision required?: <Yes/No; required when reviewer coverage is skipped, unavailable, or partial>
+
 ## Expected Outcomes
 
 Summarize what the PDLC artifacts expected to happen.

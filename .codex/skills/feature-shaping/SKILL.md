@@ -42,6 +42,9 @@ Turn requirement intent into a feature definition that is specific enough for st
 7. Check story readiness.
    Before finishing, verify that the feature is scoped enough to break into stories. If not, record the missing decisions. Keep status as `Draft` unless the human explicitly approves the feature.
 
+8. Run required subagent review.
+   Before the human checkpoint, run `product_coherence_reviewer` against the draft feature and record a `Subagent Review Evidence` ledger entry in the artifact. If the reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
+
 ## Feature Quality Bar
 
 A shaped feature should answer:
@@ -80,4 +83,5 @@ When creating or updating a feature, provide:
 - The source requirement file path or paths.
 - A short summary of the shaped feature.
 - Any assumptions made.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.

@@ -46,8 +46,8 @@ Close the PDLC loop after release by turning real-world evidence into learning. 
 8. Close the loop.
    If the human approves a learning as actionable work, continue with the appropriate skill: `requirements-refinement`, `feature-shaping`, `story-breakdown`, `solution-design`, `execution-planning`, `implementation-execution`, `validation-review`, or `release-readiness`.
 
-9. Recommend subagent review when risk warrants it.
-   If the user explicitly asks for subagents, parallel review, or independent validation, use `lifecycle_learning_reviewer` for post-release learning quality, `product_coherence_reviewer` for product follow-up, `architecture_decision_reviewer` for architecture implications, `security_reviewer` for security incidents or privacy issues, and `validation_gate_reviewer` for missed or weak validation gates.
+9. Run required subagent review.
+   Before the human checkpoint, run `lifecycle_learning_reviewer` for retrospective quality and follow-up routing. Use `product_coherence_reviewer` for product follow-up, `architecture_decision_reviewer` for architecture implications, `security_reviewer` for security incidents or privacy issues, and `validation_gate_reviewer` for missed or weak validation gates when the learning depends on those areas. Record `Subagent Review Evidence` in the lifecycle artifact. If a reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
 
 ## Lifecycle Quality Bar
 
@@ -110,4 +110,5 @@ When completing a lifecycle retrospective, provide:
 - Evidence reviewed.
 - Lessons learned.
 - Follow-up recommendations grouped by PDLC stage.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.

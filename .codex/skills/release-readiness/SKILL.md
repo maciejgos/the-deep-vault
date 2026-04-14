@@ -39,11 +39,11 @@ Prepare a human release decision from validated implementation work. This skill 
 6. Check rollback and recovery.
    For deployment or customer-visible changes, confirm there is a rollback or recovery path. If no runtime exists yet, record that rollback is not applicable. If rollback is required but missing, mark release readiness as blocked.
 
-7. Draft release readiness summary.
-   Use a concise Markdown summary in the response or create/update a focused release-readiness artifact under `spec/release-readiness/` if durable evidence is needed. Do not create release notes, tags, deployments, or PR actions unless the user explicitly asks.
+7. Draft release-readiness artifact.
+   Create or update a focused release-readiness artifact under `spec/release-readiness/` before any human release, merge, deployment, tag, announcement, or lifecycle-completion checkpoint. Do not rely on a response-only summary for a release-readiness checkpoint. Do not create release notes, tags, deployments, or PR actions unless the user explicitly asks.
 
-8. Recommend subagent review when risk warrants it.
-   If the user explicitly asks for subagents, parallel review, or independent validation, use `release_readiness_reviewer` for final readiness, `validation_gate_reviewer` for validation evidence, `security_reviewer` for security-sensitive releases, `quality_gate_reviewer` for test/build/lint quality, and `implementation_reviewer` for plan-to-implementation alignment.
+8. Run required subagent review.
+   Before the human checkpoint, run `release_readiness_reviewer` for final readiness. Use `validation_gate_reviewer` for validation evidence, `security_reviewer` for security-sensitive releases, `quality_gate_reviewer` for test/build/lint quality, and `implementation_reviewer` for plan-to-implementation alignment when release evidence depends on those areas. Record `Subagent Review Evidence` in the release-readiness artifact. If a reviewer cannot run, record the reason, release impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
 
 ## Release Quality Bar
 
@@ -98,4 +98,5 @@ When completing release-readiness review, provide:
 - Rollback or recovery notes.
 - Blocking issues and accepted-risk candidates.
 - Advisory readiness state.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.

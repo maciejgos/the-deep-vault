@@ -21,6 +21,7 @@ NON-NEGOTIABLE REQUIREMENTS:
 * Every ExecPlan must enable a complete novice to implement the feature end-to-end without prior knowledge of this repo.
 * Every ExecPlan must produce a demonstrably working behavior, not merely code changes to "meet a definition".
 * Every ExecPlan must define every term of art in plain language or do not use it.
+* Every ExecPlan for PDLC work must include subagent review checkpoints for each planned PDLC step. The checkpoints must use applicable read-only reviewer subagents from `.codex/agents/` and must record evidence or an explicit unavailable/skipped reason. Subagent findings are advisory and never replace human approval.
 
 Purpose and intent come first. Begin by explaining, in a few sentences, why the work matters from a user's perspective: what someone can do after this change that they could not do before, and how to see it working. Then guide the reader through the exact steps to achieve that outcome, including what to edit, what to run, and what they should observe.
 
@@ -58,8 +59,8 @@ Each milestone must be independently verifiable and incrementally implement the 
 
 ## Living plans and design decisions
 
-* ExecPlans are living documents. As you make key design decisions, update the plan to record both the decision and the thinking behind it. Record all decisions in the `Decision Log` section.
-* ExecPlans must contain and maintain a `Progress` section, a `Surprises & Discoveries` section, a `Decision Log`, and an `Outcomes & Retrospective` section. These are not optional.
+* ExecPlans are living documents. As you make key design decisions, update the plan to record both the decision and the thinking behind it. Record all decisions in the `Decision Log` section. Update subagent checkpoints during implementation as reviewers run, findings change, or a reviewer is skipped or unavailable.
+* ExecPlans must contain and maintain a `Progress` section, a `Surprises & Discoveries` section, a `Decision Log`, an `Outcomes & Retrospective` section, and a `Subagent Review Checkpoints` section. These are not optional.
 * When you discover optimizer behavior, performance tradeoffs, unexpected bugs, or inverse/unapply semantics that shaped your approach, capture those observations in the `Surprises & Discoveries` section with short evidence snippets (test output is ideal).
 * If you change course mid-implementation, document why in the `Decision Log` and reflect the implications in `Progress`. Plans are guides for the next contributor as much as checklists for you.
 * At completion of a major task or the full plan, write an `Outcomes & Retrospective` entry summarizing what was achieved, what remains, and lessons learned.
@@ -110,6 +111,21 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
     ## Outcomes & Retrospective
 
     Summarize outcomes, gaps, and lessons learned at major milestones or at completion. Compare the result against the original purpose.
+
+    ## Subagent Review Checkpoints
+
+    Record the advisory reviewer subagents required for each PDLC step covered by this plan. Use the local `.codex/agents/` definitions as the source of available reviewer roles. At minimum, include:
+
+    - PDLC step:
+    - Trigger:
+    - Required `.codex/agents` reviewers:
+    - Review status: pending / running / completed / skipped / unavailable
+    - Findings summary:
+    - Evidence path:
+    - Unresolved gaps:
+    - Human decision state:
+
+    Use the appropriate reviewer for each stage: `product_coherence_reviewer` for requirements, features, and stories; `architecture_decision_reviewer` for designs and ADRs; `execution_plan_reviewer` for plans; `implementation_reviewer`, `security_reviewer`, and `quality_gate_reviewer` for implementation; `validation_gate_reviewer` for validation; `release_readiness_reviewer` for release readiness; and `lifecycle_learning_reviewer` for lifecycle retrospectives. Add risk-specific reviewers when product, architecture, security, quality, validation, release, or lifecycle risk warrants it. If a required reviewer cannot run, record why, the confidence impact, the unresolved risk, and whether explicit human approval is needed to proceed.
 
     ## Context and Orientation
 

@@ -63,17 +63,32 @@ Nested `AGENTS.md` files may add more specific instructions for their subtree. F
 
 Do not self-approve PDLC artifacts or checkpoints. Codex and subagents may draft artifacts, review artifacts, recommend readiness, and summarize evidence, but only an explicit human instruction can approve, accept, reject, or mark a checkpoint complete. Keep generated artifacts in `Draft` status unless the human explicitly asks to change the status.
 
-Only use Codex subagents when the user explicitly asks for subagents, delegation, or parallel agent work. Prefer review subagents after PDLC artifacts exist:
+Every PDLC step must use the applicable read-only reviewer subagents defined in `.codex/agents/` before the human checkpoint for that step, once a draft artifact or implementation diff exists. Subagent review is required process evidence, but it is advisory only: Codex and subagents may identify risks, recommend changes, and summarize readiness, but only an explicit human instruction can approve, accept, reject, merge, release, deploy, tag, announce, close, or mark a checkpoint complete.
 
-- `product_coherence_reviewer` for product intent, scope, and artifact-chain consistency.
-- `architecture_decision_reviewer` for solution design, ADR coverage, and architectural risk.
-- `validation_gate_reviewer` for acceptance criteria, validation evidence, and CI/CD gate readiness.
-- `execution_plan_reviewer` for ExecPlan self-containment, milestones, concrete steps, recovery, and implementation readiness.
-- `implementation_reviewer` for checking implementation changes against the approved ExecPlan, scope, acceptance criteria, validation evidence, and no-self-approval policy.
-- `security_reviewer` for security, privacy, permissions, data handling, dependency risk, and abuse cases.
-- `quality_gate_reviewer` for maintainability, test quality, lint/type/build gates, Playwright UI evidence, and implementation hygiene.
-- `release_readiness_reviewer` for final merge, release, or deployment readiness, approval state, validation evidence, unresolved risks, rollback, and no-self-approval policy.
-- `lifecycle_learning_reviewer` for post-release learning, incidents, feedback, metrics, missed assumptions, follow-up requirements, ADR drift, and validation improvements.
+Use these reviewer roles by PDLC stage, adding the risk-specific reviewers when the artifact or implementation touches their area:
+
+- Requirements, features, and stories: `product_coherence_reviewer`.
+- Solution design and ADRs: `architecture_decision_reviewer`, plus `product_coherence_reviewer` when product intent may drift and `security_reviewer` when security, privacy, data, hosting, dependency, or permission decisions are involved.
+- Execution planning: `execution_plan_reviewer`, plus `validation_gate_reviewer` when test, CI/CD, or acceptance evidence is material.
+- Implementation execution: `implementation_reviewer`, `security_reviewer`, and `quality_gate_reviewer`.
+- Validation review: `validation_gate_reviewer`, plus `implementation_reviewer`, `security_reviewer`, or `quality_gate_reviewer` when evidence depends on implementation scope, security, or test quality.
+- Release readiness: `release_readiness_reviewer`, plus `validation_gate_reviewer`, `security_reviewer`, and `quality_gate_reviewer`.
+- Lifecycle retrospective: `lifecycle_learning_reviewer`, plus `product_coherence_reviewer`, `architecture_decision_reviewer`, `security_reviewer`, or `validation_gate_reviewer` depending on the learning.
+
+Each PDLC artifact must record `Subagent Review Evidence` when the stage uses or should use reviewer subagents:
+
+- PDLC step.
+- Trigger.
+- Required `.codex/agents` reviewers.
+- Review status: `pending`, `running`, `completed`, `skipped`, or `unavailable`.
+- Findings summary.
+- Evidence path.
+- Unresolved gaps.
+- Human decision state.
+
+If an applicable reviewer cannot be executed, record the reviewer role, reason unavailable or skipped, impact on confidence, unresolved risk, and whether explicit human approval is required to proceed despite missing advisory review.
+
+`pending` and `running` reviewer statuses are allowed only while drafting or implementing. Before a human checkpoint, each required reviewer must be `completed`, `skipped`, or `unavailable`; skipped or unavailable reviewers require explicit evidence and human acknowledgment before advancing.
 
 ## ExecPlans
 

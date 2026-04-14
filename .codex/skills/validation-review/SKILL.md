@@ -46,8 +46,8 @@ Turn implementation evidence into a clear validation record. This skill checks w
 8. Record result without self-approval.
    Use `Pending`, `Blocked`, `Failed`, or `Ready for human review` as the validation result unless the human explicitly instructs otherwise. Do not mark validation as accepted or complete yourself.
 
-9. Recommend subagent review when risk warrants it.
-   If the user explicitly asks for subagents, parallel review, or independent validation, use `validation_gate_reviewer` for validation coverage and CI/CD gate readiness, `implementation_reviewer` for implementation-to-plan alignment, `security_reviewer` for security-sensitive changes, `quality_gate_reviewer` for code quality and test quality, and `architecture_decision_reviewer` for architecture drift.
+9. Run required subagent review.
+   Before the human checkpoint, run `validation_gate_reviewer` for validation coverage and CI/CD gate readiness. Use `implementation_reviewer` for implementation-to-plan alignment, `security_reviewer` for security-sensitive changes, `quality_gate_reviewer` for code quality and test quality, and `architecture_decision_reviewer` for architecture drift when the validation evidence depends on those areas. Record `Subagent Review Evidence` in the validation artifact. If a reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
 
 ## Validation Quality Bar
 
@@ -111,4 +111,5 @@ When completing validation review, provide:
 - Evidence summary.
 - Missing or failed validation.
 - Recommended future CI/CD gates.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.
