@@ -6,7 +6,7 @@ Draft
 
 ## Scope
 
-This retrospective reviews process feedback raised during The Deep Vault complete-game MVP PDLC workflow: Codex did not consistently execute or record advisory subagent reviews across later PDLC stages.
+This retrospective reviews process feedback raised during The Deep Vault complete-game MVP PDLC workflow: Codex did not consistently execute or record advisory subagent reviews across later PDLC stages, and the PDLC process should automate relevant reviewer subagent execution at defined checkpoints.
 
 This is a workflow and governance retrospective. It does not re-open product scope, implementation acceptance, validation acceptance, release approval, merge, deployment, tag, announcement, or lifecycle completion.
 
@@ -26,9 +26,9 @@ This is a workflow and governance retrospective. It does not re-open product sco
 
 ## Expected Outcomes
 
-- When the human explicitly asks for subagents, delegation, or parallel agent work, Codex should consider using relevant read-only reviewer subagents after PDLC artifacts exist.
+- The PDLC workflow should automatically execute relevant read-only reviewer subagents at defined stage gates once the process has human authorization to use subagents.
 - Subagent reviews should remain advisory. They may draft findings, identify risks, and recommend readiness, but they cannot approve, accept, reject, merge, release, deploy, or close checkpoints.
-- If subagents are not used after explicit permission or request, the workflow should record why they were skipped so the decision is visible.
+- If a required reviewer subagent cannot be executed, the workflow should record the reviewer role, reason unavailable or skipped, impact on confidence, and whether human approval is needed to proceed despite missing advisory review.
 - Validation and release-readiness evidence should distinguish human approval state from advisory automated, Codex, and subagent review evidence.
 
 ## Observed Outcomes
@@ -38,11 +38,15 @@ This is a workflow and governance retrospective. It does not re-open product sco
 - Later implementation validation, release-readiness, and lifecycle artifacts recorded automated and Codex-authored evidence, but did not include a subagent-review consideration field for implementation, security, quality, validation-gate, release-readiness, or lifecycle-learning review.
 - The durable record is therefore incomplete: it shows design-stage subagent use, but not consistent later-stage subagent consideration, usage, or skip reasons.
 - The human noticed and reported the gap during lifecycle retrospective feedback.
+- The human clarified that subagents should be executed automatically by the process, not depend on the human remembering to ask for reviewer agents at each PDLC stage.
 
 ## Evidence
 
 - Evidence: Human feedback: "I noticed that you are not executing subagents during PDLC workflow."
   Source: User message on 2026-04-14 during lifecycle retrospective.
+
+- Evidence: Human clarification: "subagents should be executed in automated way by the process."
+  Source: User message on 2026-04-14 during lifecycle retrospective follow-up.
 
 - Evidence: Repository guidance allows subagents only when explicitly asked and lists preferred reviewer subagents after PDLC artifacts exist.
   Source: `AGENTS.md`
@@ -59,11 +63,15 @@ This is a workflow and governance retrospective. It does not re-open product sco
 - Evidence: Read-only lifecycle and validation-gate reviewer subagents both classified this as a process-quality gap and recommended explicit subagent review evidence or skip reasons in validation and release-readiness artifacts.
   Source: `lifecycle_learning_reviewer` and `validation_gate_reviewer` advisory reviews on 2026-04-14.
 
+- Evidence: Read-only lifecycle and execution-plan reviewer subagents found that the clarified expectation conflicts with current opt-in guidance and should route first to Process / Operations and Execution Planning, then to Validation Review and Release Readiness evidence.
+  Source: `lifecycle_learning_reviewer` and `execution_plan_reviewer` advisory reviews on 2026-04-14.
+
 ## Confirmed Assumptions
 
-- Subagents are permitted in this repository only when the human explicitly asks for subagents, delegation, or parallel agent work.
+- Current repository guidance permits subagents only when the human explicitly asks for subagents, delegation, or parallel agent work.
 - Subagent findings are advisory evidence and do not replace human approval.
 - Reviewer subagents are most useful after artifacts exist because they can check traceability, risk, and readiness against concrete requirements, designs, plans, implementation, and validation evidence.
+- Stage-triggered subagent execution can be automated as process evidence while preserving the no-self-approval boundary.
 
 ## Disproven or Risky Assumptions
 
@@ -76,37 +84,49 @@ This is a workflow and governance retrospective. It does not re-open product sco
 - Assumption: Existing implementation validation and release-readiness artifacts capture all important workflow review evidence.
   Status: Incomplete. They do not currently capture whether requested later-stage subagent review happened, was skipped, or produced findings.
 
+- Assumption: Opt-in subagent usage is an adequate governance model for AI-native PDLC.
+  Status: Disproven by human feedback. The desired process is stage-triggered reviewer execution at defined checkpoints after authorization, with explicit skip evidence when execution is unavailable.
+
 ## Lessons Learned
 
-The workflow needs a visible subagent consideration checkpoint whenever the human grants subagent permission. The checkpoint should say whether subagents were used, which reviewer roles were used, what they found, or why they were skipped.
+The workflow needs automated subagent review checkpoints once the human authorizes subagent use for the PDLC process. The checkpoint should say which reviewer roles were required for the stage, which subagents ran, what they found, where the evidence is recorded, and whether any reviewer was unavailable or skipped.
 
 Design validation already demonstrates the intended pattern: subagent findings can be captured as advisory review evidence, gaps can be addressed, and human approval can remain separate. Later PDLC stages should follow the same pattern instead of relying only on main-agent review and automated test evidence.
 
-Subagent use should be aligned to PDLC stage rather than applied generically:
+Subagent execution should be aligned to PDLC stage rather than applied generically:
 
-- Product and scope review: `product_coherence_reviewer`
+- Requirements and feature scope review: `product_coherence_reviewer`
 - Solution design and ADR review: `architecture_decision_reviewer`
 - ExecPlan readiness review: `execution_plan_reviewer`
-- Implementation review: `implementation_reviewer`
-- Security and privacy review: `security_reviewer`
-- Code quality and test hygiene review: `quality_gate_reviewer`
+- Implementation completion review: `implementation_reviewer`, `security_reviewer`, `quality_gate_reviewer`
 - Validation gate review: `validation_gate_reviewer`
 - Release readiness review: `release_readiness_reviewer`
 - Lifecycle learning review: `lifecycle_learning_reviewer`
 
-This retrospective pass used `lifecycle_learning_reviewer` and `validation_gate_reviewer` to turn the feedback into recorded lifecycle learning.
+Each checkpoint should produce a subagent evidence ledger entry:
+
+- Checkpoint
+- Trigger
+- Reviewer subagents
+- Status: `pending`, `running`, `completed`, `skipped`, or `unavailable`
+- Findings summary
+- Evidence path
+- Unresolved gaps
+- Human decision state
+
+This retrospective pass used `lifecycle_learning_reviewer`, `validation_gate_reviewer`, and `execution_plan_reviewer` to turn the feedback into recorded lifecycle learning.
 
 ## Follow-Up Recommendations
 
 - Requirements: No product requirement change is needed unless the human wants subagent governance to become a formal workflow requirement for this repository template.
 - Features: No game feature scope change is needed.
 - Stories: No MVP gameplay story change is needed.
-- Design / ADRs: Add a process note or ADR only if the repository should formalize subagent review as part of the PDLC architecture.
-- Plans: Add a "Subagent consideration" line to future ExecPlan milestones when the human grants permission for subagents.
+- Design / ADRs: Add a process ADR only if the repository should formalize automated advisory reviewer orchestration as part of the Flow Forge workflow architecture.
+- Plans: Add required `Subagent Review Checkpoints` and a `Subagent Evidence Ledger` to future ExecPlans for significant work.
 - Implementation: If the human wants a retroactive review of the current MVP branch, run `implementation_reviewer`, `security_reviewer`, `quality_gate_reviewer`, `validation_gate_reviewer`, and `release_readiness_reviewer`, then record the findings.
-- Validation: Add subagent review evidence to validation artifacts when subagents were requested, including reviewer role, status, findings, and unresolved gaps.
-- Release Readiness: Add a release-readiness check for requested advisory subagent reviews before recommending a human release decision.
-- Process / Operations: Update workflow guidance or templates to require one visible statement when subagents are allowed: `Subagent consideration: used / skipped / not requested`, with the reason and evidence location.
+- Validation: Add a validation gate requiring evidence that required stage subagents ran, produced findings, or were explicitly unavailable.
+- Release Readiness: Require validation evidence to include required subagent review status before recommending a human release decision.
+- Process / Operations: Update `AGENTS.md`, skill instructions, and templates so relevant reviewer subagents run automatically at specified PDLC checkpoints once subagent use is authorized for the process.
 
 ## Human Checkpoint
 
@@ -114,6 +134,6 @@ Human decision is needed on whether to:
 
 - Record this as accepted lifecycle feedback.
 - Run retroactive advisory subagent reviews over the current MVP implementation and release-readiness evidence.
-- Update templates, skills, or `AGENTS.md` so future PDLC workflows always record subagent consideration when permission is granted.
+- Update templates, skills, or `AGENTS.md` so future PDLC workflows automatically execute required reviewer subagents at stage gates and record a subagent evidence ledger.
 
 Only a human may approve the lifecycle learning, require process changes, accept retroactive review findings, or mark follow-up complete.
