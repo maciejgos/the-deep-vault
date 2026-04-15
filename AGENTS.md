@@ -33,6 +33,7 @@ The Deep Vault MVP uses Node.js 24 LTS, pnpm, Vite, React, TypeScript, TailwindC
 - `pnpm test:unit`: run Vitest unit tests.
 - `pnpm test:content`: run content validation tests once content modules exist.
 - `pnpm test:e2e`: run Playwright end-to-end tests.
+- `pnpm audit:deps`: run the pnpm dependency security audit with a moderate-or-higher severity gate when the registry audit endpoint is available.
 - `pnpm validate`: run lint, unit tests, content tests, build, and Playwright checks.
 - `docker compose run --rm workspace pnpm install --frozen-lockfile`: install inside the planned container workspace.
 - `docker compose run --rm workspace pnpm validate`: run validation inside the planned container workspace.

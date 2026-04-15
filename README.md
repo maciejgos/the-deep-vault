@@ -155,6 +155,14 @@ Run linting:
 pnpm lint
 ```
 
+Run a dependency security audit:
+
+```sh
+pnpm audit:deps
+```
+
+Registry endpoint failures are treated as unavailable local audit infrastructure, not as dependency approval. CI also runs OSV and dependency-review gates.
+
 Build the static site:
 
 ```sh
@@ -173,7 +181,7 @@ Run the full validation suite:
 pnpm validate
 ```
 
-GitHub Actions runs the same validation chain for pull requests and pushes to `main`.
+GitHub Actions runs the validation chain plus dependency security gates for pull requests and pushes to `main`.
 
 If Playwright browsers are not installed yet, run:
 
