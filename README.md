@@ -173,6 +173,8 @@ Run the full validation suite:
 pnpm validate
 ```
 
+GitHub Actions runs the same validation chain for pull requests and pushes to `main`.
+
 If Playwright browsers are not installed yet, run:
 
 ```sh
