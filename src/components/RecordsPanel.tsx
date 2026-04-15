@@ -6,6 +6,14 @@ interface RecordsPanelProps {
 }
 
 export function RecordsPanel({ content, state }: RecordsPanelProps) {
+  const visitedLocationIds = Array.from(
+    new Set(
+      state.visitedSceneIds
+        .map((sceneId) => content.scenes[sceneId]?.locationId)
+        .filter((locationId): locationId is string => Boolean(locationId))
+    )
+  );
+
   return (
     <aside className="records-panel" aria-label="Records">
       <RecordGroup
@@ -22,6 +30,26 @@ export function RecordsPanel({ content, state }: RecordsPanelProps) {
         title="Codex"
         items={state.codexIds.map((id) => content.codex[id]?.title ?? id)}
         emptyText="No doctrine notes logged."
+      />
+      <RecordGroup
+        title="Factions"
+        items={Object.entries(state.factionTrust).map(([id, trust]) => `${content.factions[id]?.name ?? id}: ${trust}`)}
+        emptyText="No faction pressure tracked."
+      />
+      <RecordGroup
+        title="Characters"
+        items={Object.entries(state.characterStates).map(([id, value]) => `${content.characters[id]?.name ?? id}: ${value}`)}
+        emptyText="No character outcomes tracked."
+      />
+      <RecordGroup
+        title="Locations"
+        items={visitedLocationIds.map((id) => content.locations[id]?.name ?? id)}
+        emptyText="No locations visited."
+      />
+      <RecordGroup
+        title="Items"
+        items={state.itemIds.map((id) => content.items[id]?.name ?? id)}
+        emptyText="No key items secured."
       />
     </aside>
   );
@@ -49,4 +77,3 @@ function RecordGroup({ title, items, emptyText }: RecordGroupProps) {
     </section>
   );
 }
-
