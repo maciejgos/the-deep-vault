@@ -382,7 +382,8 @@ describe("game foundation", () => {
   it("evaluates endings from final route or route progress", () => {
     const playedState = applyChoice(content, createInitialState(content.startSceneId), "choice.inspect");
 
-    expect(evaluateEnding(content, playedState).ending?.id).toBe("ending.full-exposure");
+    expect(evaluateEnding(content, playedState).routeId).toBe("full-exposure");
+    expect(evaluateEnding(content, playedState).ending).toBeNull();
 
     const committedState: GameState = {
       ...playedState,
@@ -391,12 +392,14 @@ describe("game foundation", () => {
     };
 
     expect(evaluateEnding(content, committedState).routeId).toBe("full-exposure");
+    expect(evaluateEnding(content, committedState).ending?.id).toBe("ending.full-exposure");
   });
 
-  it("can infer an ending from accumulated route signals without a final route", () => {
+  it("can infer route pressure from accumulated signals without revealing an ending", () => {
     const signaledState = runRouteChoices(content, ["choice.inspect"]);
 
-    expect(evaluateEnding(content, signaledState).ending?.id).toBe("ending.full-exposure");
+    expect(evaluateEnding(content, signaledState).routeId).toBe("full-exposure");
+    expect(evaluateEnding(content, signaledState).ending).toBeNull();
   });
 
   it("saves and loads validated state from one local slot", () => {

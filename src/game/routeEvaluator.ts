@@ -6,7 +6,9 @@ const ROUTES: RouteId[] = ["controlled-truth", "full-exposure", "preserve-order"
 export function evaluateEnding(content: GameContent, state: GameState): EndingResult {
   const routeScores = scoreRoutes(state);
   const routeId = state.finalRoute ?? chooseHighestScoringRoute(routeScores);
-  const ending = routeId ? findEndingForRoute(content, state, routeId) : null;
+  const currentScene = content.scenes[state.currentSceneId];
+  const isTerminalScene = Boolean(currentScene && currentScene.choices.length === 0);
+  const ending = state.finalRoute && isTerminalScene ? findEndingForRoute(content, state, state.finalRoute) : null;
 
   return {
     routeId,
@@ -97,7 +99,7 @@ function characterScore(state: GameState, characterId: string, value: string): n
 }
 
 function stabilityBonus(state: GameState): number {
-  return state.publicStability >= 0 ? 1 : 0;
+  return state.evidenceCount > 0 && state.publicStability >= 0 ? 1 : 0;
 }
 
 function pressureBonus(state: GameState): number {

@@ -20,10 +20,21 @@ export function StatusSummary({ state }: StatusSummaryProps) {
         <dd>{state.evidenceCount}</dd>
       </div>
       <div>
+        <dt>Stability</dt>
+        <dd>{state.publicStability}</dd>
+      </div>
+      <div>
+        <dt>Clearance</dt>
+        <dd>{state.clearance}</dd>
+      </div>
+      <div>
         <dt>Route</dt>
-        <dd>{state.finalRoute ?? "undecided"}</dd>
+        <dd>{formatRoute(state.finalRoute)}</dd>
       </div>
     </dl>
   );
 }
 
+function formatRoute(routeId: string | null) {
+  return routeId ? routeId.replaceAll("-", " ") : "undecided";
+}

@@ -19,7 +19,10 @@ export const mandatoryMainSceneIds = [
   "scene.c6.audience-voss",
   "scene.d1.choosing-coalition",
   "scene.d2.open-speakers",
-  "scene.d3.crisis-variants",
+  "scene.d3.controlled-truth",
+  "scene.d3.full-exposure",
+  "scene.d3.preserve-order",
+  "scene.d3.exit-protocol",
   "scene.d4.final-choice-terminal"
 ] as const;
 

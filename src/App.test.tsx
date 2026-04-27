@@ -54,7 +54,7 @@ describe("App", () => {
 
     expect(screen.getByRole("heading", { name: "Ending Summary" })).toBeInTheDocument();
     expect(screen.getByText("Full Exposure")).toBeInTheDocument();
-    expect(screen.getByText("full-exposure")).toBeInTheDocument();
+    expect(screen.getByText("full exposure")).toBeInTheDocument();
 
     const records = screen.getByRole("complementary", { name: "Records" });
     expect(within(records).getByText("B-17 Power Draw")).toBeInTheDocument();
@@ -64,5 +64,19 @@ describe("App", () => {
     expect(within(records).getByText("External Node")).toBeInTheDocument();
     expect(within(records).getByRole("heading", { name: "Items" })).toBeInTheDocument();
     expect(within(records).getByText("Broadcast Cipher")).toBeInTheDocument();
+  });
+
+  it("starts a fresh game from an in-progress scene", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Begin the maintenance shift" }));
+    expect(screen.getByRole("heading", { name: "A1. Pressure Fault" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "New game" }));
+
+    expect(screen.getByRole("heading", { name: "P1. Survival Notice" })).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("New game started.");
+    expect(screen.getByText("No active leads.")).toBeInTheDocument();
   });
 });
