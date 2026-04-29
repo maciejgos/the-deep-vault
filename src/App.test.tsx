@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { App } from "./App";
 
@@ -36,6 +36,12 @@ describe("App", () => {
     expect(screen.getByText(/Tomas Vale/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Begin the maintenance shift" })).toBeInTheDocument();
     expect(screen.getByText("Survival Doctrine")).toBeInTheDocument();
+
+    const records = screen.getByRole("complementary", { name: "Records" });
+    expect(within(records).getByRole("heading", { name: "Factions" })).toBeInTheDocument();
+    expect(within(records).getByText("Mechanical: 0")).toBeInTheDocument();
+    expect(within(records).getByRole("heading", { name: "Locations" })).toBeInTheDocument();
+    expect(within(records).getByText("Level 62 Manifold Corridor")).toBeInTheDocument();
   });
 
   it("plays the full-exposure MVP route and shows records", async () => {
@@ -47,8 +53,30 @@ describe("App", () => {
     }
 
     expect(screen.getByRole("heading", { name: "Ending Summary" })).toBeInTheDocument();
-    expect(screen.getByText("B-17 Power Draw")).toBeInTheDocument();
     expect(screen.getByText("Full Exposure")).toBeInTheDocument();
-    expect(screen.getByText("full-exposure")).toBeInTheDocument();
+    expect(screen.getByText("full exposure")).toBeInTheDocument();
+
+    const records = screen.getByRole("complementary", { name: "Records" });
+    expect(within(records).getByText("B-17 Power Draw")).toBeInTheDocument();
+    expect(within(records).getByRole("heading", { name: "Characters" })).toBeInTheDocument();
+    expect(within(records).getByText("Mira Senn: alive")).toBeInTheDocument();
+    expect(within(records).getByRole("heading", { name: "Locations" })).toBeInTheDocument();
+    expect(within(records).getByText("External Node")).toBeInTheDocument();
+    expect(within(records).getByRole("heading", { name: "Items" })).toBeInTheDocument();
+    expect(within(records).getByText("Broadcast Cipher")).toBeInTheDocument();
+  });
+
+  it("starts a fresh game from an in-progress scene", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Begin the maintenance shift" }));
+    expect(screen.getByRole("heading", { name: "A1. Pressure Fault" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "New game" }));
+
+    expect(screen.getByRole("heading", { name: "P1. Survival Notice" })).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("New game started.");
+    expect(screen.getByText("No active leads.")).toBeInTheDocument();
   });
 });

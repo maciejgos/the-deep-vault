@@ -16,6 +16,20 @@ Explain the context a contributor needs before starting.
 
 Link to the source feature and requirement files that justify this story.
 
+## Subagent Review Evidence
+
+- PDLC step: Story breakdown
+- Trigger: <Draft story ready for advisory review before human checkpoint>
+- Required `.codex/agents` reviewers: `product_coherence_reviewer`
+- Review status: <pending, running, completed, skipped, or unavailable>
+- Findings summary: <Advisory findings; not approval>
+- Evidence path: <Link to subagent output, validation note, or review artifact>
+- Unresolved gaps: <Open issues or none>
+- Human decision state: <Pending unless explicitly approved by a human>
+- Reason if skipped or unavailable: <Reason, or Not applicable>
+- Impact on confidence: <How missing or partial review affects confidence>
+- Human decision required?: <Yes/No; required when reviewer coverage is skipped, unavailable, or partial>
+
 ## Scope
 
 Describe the exact work included in this story.

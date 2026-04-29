@@ -11,10 +11,13 @@ test("opening scene is visible, menu based, and keyboard reachable", async ({ pa
   await expect(page.getByRole("heading", { name: "P1. Survival Notice" })).toBeVisible();
   await expect(page.getByText(/Tomas Vale/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Begin the maintenance shift" })).toBeVisible();
+  await expect(page.getByLabel("Game version")).toHaveText("v0.1.0");
+  await expect(page.getByRole("heading", { name: "Route drift" })).toBeVisible();
 
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { name: "A1. Pressure Fault" })).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("Items +1");
 });
 
 for (const fixture of Object.values(gameContent.routeFixtures)) {
@@ -24,13 +27,18 @@ for (const fixture of Object.values(gameContent.routeFixtures)) {
 
     await expect(page.getByRole("heading", { name: "Ending Summary" })).toBeVisible();
     await expect(page.getByRole("heading", { name: routeTitle(fixture.routeId) })).toBeVisible();
-    await expect(page.getByText(fixture.routeId)).toBeVisible();
+    await expect(page.getByLabel("Ending report")).toBeVisible();
+    await expect(page.locator(".status-summary dd").filter({ hasText: fixture.routeId.replaceAll("-", " ") })).toBeVisible();
 
     if (fixture.routeId === "full-exposure") {
       await testInfo.attach("full-exposure-ending", {
         body: await page.screenshot({ fullPage: true }),
         contentType: "image/png"
       });
+    }
+
+    if (fixture.routeId === "preserve-order") {
+      await expect(page.getByLabel("Ending allies").getByText("Director Elian Voss: shielded")).toBeVisible();
     }
   });
 }

@@ -11,7 +11,9 @@ import {
   loadGame,
   runRouteChoices,
   saveGame,
+  startNewGame,
   validateContentGraph,
+  type Effect,
   type GameContent,
   type GameState,
   type StorageLike
@@ -53,6 +55,10 @@ const content: GameContent = {
       title: "B-17 Archive",
       zone: "Level 17",
       narrative: ["A forbidden level answers."],
+      entryEffects: [
+        { type: "setFlag", flag: "archiveEntered", value: true },
+        { type: "adjustStress", amount: 1 }
+      ],
       choices: []
     }
   },
@@ -140,14 +146,228 @@ describe("game foundation", () => {
     expect(nextState.visitedSceneIds).toEqual(["scene.start", "scene.archive"]);
     expect(nextState.selectedChoices).toEqual([{ sceneId: "scene.start", choiceId: "choice.inspect" }]);
     expect(nextState.flags.manifoldInspected).toBe(true);
+    expect(nextState.flags.archiveEntered).toBe(true);
+    expect(nextState.stress).toBe(1);
     expect(nextState.evidenceIds).toEqual(["evidence.b17"]);
     expect(nextState.evidenceCount).toBe(1);
     expect(nextState.factionTrust.mechanical).toBe(2);
     expect(nextState.routeProgress["full-exposure"]).toBe(3);
     expect(nextState.questStates["quest.find-b17"]?.status).toBe("active");
+    expect(nextState.questStates["quest.find-b17"]?.updatedAtSceneId).toBe("scene.start");
     expect(nextState.codexIds).toEqual(["codex.doctrine"]);
     expect(nextState.itemIds).toEqual(["item.sensor-spool"]);
     expect(evaluateCondition({ type: "hasEvidence", evidenceId: "evidence.b17" }, nextState)).toBe(true);
+  });
+
+  it("applies target scene entry effects after a moveToScene effect transition", () => {
+    const moveEffectContent: GameContent = {
+      ...content,
+      scenes: {
+        ...content.scenes,
+        "scene.start": {
+          ...content.scenes["scene.start"],
+          choices: [
+            {
+              id: "choice.move-effect",
+              text: "Follow the effect transition",
+              effects: [{ type: "moveToScene", sceneId: "scene.archive" }]
+            }
+          ]
+        }
+      }
+    };
+
+    const nextState = applyChoice(moveEffectContent, createInitialState(content.startSceneId), "choice.move-effect");
+
+    expect(nextState.currentSceneId).toBe("scene.archive");
+    expect(nextState.visitedSceneIds).toEqual(["scene.start", "scene.archive"]);
+    expect(nextState.flags.archiveEntered).toBe(true);
+    expect(nextState.stress).toBe(1);
+  });
+
+  it("uses the transitioned scene context for later effects in the same effect list", () => {
+    const postTransitionEffectContent: GameContent = {
+      ...content,
+      scenes: {
+        ...content.scenes,
+        "scene.start": {
+          ...content.scenes["scene.start"],
+          choices: [
+            {
+              id: "choice.post-transition-effect",
+              text: "Move before updating the quest",
+              effects: [
+                { type: "moveToScene", sceneId: "scene.archive" },
+                { type: "updateQuest", questId: "quest.find-b17", status: "active" }
+              ]
+            }
+          ]
+        }
+      }
+    };
+
+    const nextState = applyChoice(
+      postTransitionEffectContent,
+      createInitialState(content.startSceneId),
+      "choice.post-transition-effect"
+    );
+
+    expect(nextState.currentSceneId).toBe("scene.archive");
+    expect(nextState.questStates["quest.find-b17"]?.updatedAtSceneId).toBe("scene.archive");
+  });
+
+  it("does not apply entry effects twice when a choice effect and target resolve to the same scene", () => {
+    const duplicateTransitionContent: GameContent = {
+      ...content,
+      scenes: {
+        ...content.scenes,
+        "scene.start": {
+          ...content.scenes["scene.start"],
+          choices: [
+            {
+              id: "choice.duplicate-transition",
+              text: "Follow both transition declarations",
+              targetSceneId: "scene.archive",
+              effects: [{ type: "moveToScene", sceneId: "scene.archive" }]
+            }
+          ]
+        }
+      }
+    };
+
+    const nextState = applyChoice(duplicateTransitionContent, createInitialState(content.startSceneId), "choice.duplicate-transition");
+
+    expect(nextState.currentSceneId).toBe("scene.archive");
+    expect(nextState.flags.archiveEntered).toBe(true);
+    expect(nextState.stress).toBe(1);
+  });
+
+  it("rejects transition chains that re-enter a scene across the same effect list", () => {
+    const reentryContent: GameContent = {
+      ...content,
+      scenes: {
+        ...content.scenes,
+        "scene.start": {
+          ...content.scenes["scene.start"],
+          choices: [
+            {
+              id: "choice.reentry",
+              text: "Re-enter through chained transitions",
+              effects: [
+                { type: "moveToScene", sceneId: "scene.archive" },
+                { type: "moveToScene", sceneId: "scene.middle" }
+              ]
+            }
+          ]
+        },
+        "scene.middle": {
+          id: "scene.middle",
+          title: "Middle Relay",
+          zone: "Level 18",
+          narrative: ["A relay points back to the archive."],
+          entryEffects: [{ type: "moveToScene", sceneId: "scene.archive" }],
+          choices: []
+        }
+      }
+    };
+
+    expect(() => applyChoice(reentryContent, createInitialState(content.startSceneId), "choice.reentry")).toThrow(
+      "Scene transition cycle detected: scene.archive"
+    );
+  });
+
+  it("rejects effect transitions that re-enter the source scene during one choice", () => {
+    const sourceReentryContent: GameContent = {
+      ...content,
+      scenes: {
+        ...content.scenes,
+        "scene.start": {
+          ...content.scenes["scene.start"],
+          choices: [
+            {
+              id: "choice.source-reentry",
+              text: "Loop back to the source",
+              effects: [
+                { type: "moveToScene", sceneId: "scene.archive" },
+                { type: "moveToScene", sceneId: "scene.start" }
+              ]
+            }
+          ]
+        }
+      }
+    };
+
+    expect(() => applyChoice(sourceReentryContent, createInitialState(content.startSceneId), "choice.source-reentry")).toThrow(
+      "Scene transition cycle detected: scene.start"
+    );
+  });
+
+  it("shares transition tracking between moveToScene effects and a final target scene", () => {
+    const targetReentryContent: GameContent = {
+      ...content,
+      scenes: {
+        ...content.scenes,
+        "scene.start": {
+          ...content.scenes["scene.start"],
+          choices: [
+            {
+              id: "choice.target-reentry",
+              text: "Return through the target",
+              targetSceneId: "scene.archive",
+              effects: [
+                { type: "moveToScene", sceneId: "scene.archive" },
+                { type: "moveToScene", sceneId: "scene.middle" }
+              ]
+            }
+          ]
+        },
+        "scene.middle": {
+          id: "scene.middle",
+          title: "Middle Relay",
+          zone: "Level 18",
+          narrative: ["A relay waits for the final target transition."],
+          choices: []
+        }
+      }
+    };
+
+    expect(() => applyChoice(targetReentryContent, createInitialState(content.startSceneId), "choice.target-reentry")).toThrow(
+      "Scene transition cycle detected: scene.archive"
+    );
+  });
+
+  it("rejects excessively long acyclic scene transition chains", () => {
+    const chainLength = 102;
+    const chainScenes = Object.fromEntries(
+      Array.from({ length: chainLength }, (_, index) => {
+        const sceneId = `scene.chain.${index}`;
+        const entryEffects: Effect[] =
+          index < chainLength - 1 ? [{ type: "moveToScene", sceneId: `scene.chain.${index + 1}` }] : [];
+
+        return [
+          sceneId,
+          {
+            id: sceneId,
+            title: `Chain ${index}`,
+            zone: "Transition Test",
+            narrative: ["A long transition chain continues."],
+            entryEffects,
+            choices: []
+          }
+        ];
+      })
+    );
+
+    const chainContent: GameContent = {
+      ...content,
+      startSceneId: "scene.chain.0",
+      scenes: {
+        ...content.scenes,
+        ...chainScenes
+      }
+    };
+
+    expect(() => startNewGame(chainContent)).toThrow("Scene transition chain exceeded 100 transitions");
   });
 
   it("keeps effect application immutable and bounded", () => {
@@ -162,7 +382,8 @@ describe("game foundation", () => {
   it("evaluates endings from final route or route progress", () => {
     const playedState = applyChoice(content, createInitialState(content.startSceneId), "choice.inspect");
 
-    expect(evaluateEnding(content, playedState).ending?.id).toBe("ending.full-exposure");
+    expect(evaluateEnding(content, playedState).routeId).toBe("full-exposure");
+    expect(evaluateEnding(content, playedState).ending).toBeNull();
 
     const committedState: GameState = {
       ...playedState,
@@ -171,12 +392,14 @@ describe("game foundation", () => {
     };
 
     expect(evaluateEnding(content, committedState).routeId).toBe("full-exposure");
+    expect(evaluateEnding(content, committedState).ending?.id).toBe("ending.full-exposure");
   });
 
-  it("can infer an ending from accumulated route signals without a final route", () => {
+  it("can infer route pressure from accumulated signals without revealing an ending", () => {
     const signaledState = runRouteChoices(content, ["choice.inspect"]);
 
-    expect(evaluateEnding(content, signaledState).ending?.id).toBe("ending.full-exposure");
+    expect(evaluateEnding(content, signaledState).routeId).toBe("full-exposure");
+    expect(evaluateEnding(content, signaledState).ending).toBeNull();
   });
 
   it("saves and loads validated state from one local slot", () => {

@@ -6,7 +6,15 @@ Accepted
 
 ## Release Scope
 
-This release-readiness review covers the `codex/deep-vault-complete-game-mvp` branch as a merge/release candidate for The Deep Vault browser-first complete-game MVP implementation.
+This release-readiness review covers The Deep Vault browser-first complete-game MVP implementation after the human-approved fast-forward merge of `codex/deep-vault-complete-game-mvp` into `main`.
+
+Merge evidence:
+
+- Human merge instruction: `Merge code`.
+- Merge method: fast-forward merge with `git merge --ff-only codex/deep-vault-complete-game-mvp`.
+- Merge-time state: `main` fast-forwarded to `codex/deep-vault-complete-game-mvp` at `35e818b480f742e5df709534b70e80f11244728d`.
+- Current state note: later lifecycle and release-readiness documentation commits may place `main` ahead of the merged feature branch and `origin/main`.
+- Post-merge lifecycle evidence: `spec/lifecycle/the-deep-vault-mvp-post-merge-retrospective.md`.
 
 Included scope:
 
@@ -21,7 +29,6 @@ Included scope:
 Out of scope:
 
 - Production deployment.
-- Git merge.
 - Release tag.
 - Announcement.
 - Cloudflare Pages setup.
@@ -55,7 +62,8 @@ Out of scope:
   - `spec/architecture-records/cloudflare-pages-static-hosting-for-mvp.md`
 - ExecPlan: `spec/plans/the-deep-vault-complete-game-mvp-implementation.md`
 - Validation: `spec/validation/the-deep-vault-complete-game-mvp-implementation-validation.md`
-- Implementation commits:
+- Post-merge lifecycle retrospective: `spec/lifecycle/the-deep-vault-mvp-post-merge-retrospective.md`
+- Related commits:
   - `22a201e Add Deep Vault MVP runtime foundation`
   - `1e3c167 Add Deep Vault game engine foundation`
   - `6fcbe76 Add first Deep Vault content path`
@@ -64,6 +72,9 @@ Out of scope:
   - `10bcaca Add route fixture save-load coverage`
   - `4ae63d9 Expand browser route validation`
   - `d02c236 Add MVP implementation validation evidence`
+  - `4903b25 Add MVP release readiness evidence`
+  - `940533c Add MVP pre-release lifecycle retrospective`
+  - `0198663 Add MVP post-merge lifecycle retrospective`
 
 ## Human Checkpoint State
 
@@ -71,11 +82,12 @@ Out of scope:
 - Implementation execution: Human requested continued milestone implementation.
 - Validation artifact: `Accepted` in `spec/validation/the-deep-vault-complete-game-mvp-implementation-validation.md`.
 - Release approval: Pending.
-- Merge approval: Pending.
+- Merge approval: Completed by explicit human instruction: `Merge code`.
+- Merge execution: Completed by fast-forward merge into `main` at `35e818b480f742e5df709534b70e80f11244728d`.
 - Deployment approval: Pending.
 - Tag or announcement approval: Pending.
 
-Codex has not approved release, merge, deployment, validation completion, or lifecycle completion.
+Codex has not approved release, deployment, validation completion, or lifecycle completion. The merge was performed only after explicit human instruction.
 
 ## Validation and CI/CD Evidence
 
@@ -107,6 +119,10 @@ Codex has not approved release, merge, deployment, validation completion, or lif
   Status: Unavailable.
   Evidence: No CI workflow is committed yet; validation is Docker-local.
 
+- Check: Post-merge branch state.
+  Status: Passed.
+  Evidence: `main` and `codex/deep-vault-complete-game-mvp` point at `35e818b480f742e5df709534b70e80f11244728d`. At the time of post-merge lifecycle review, `main` also had one additional local lifecycle documentation commit, `0198663 Add MVP post-merge lifecycle retrospective`, ahead of `origin/main`.
+
 - Check: Host-native validation.
   Status: Unavailable.
   Evidence: Host `node` and `pnpm` are unavailable in this environment; Docker is the validated path.
@@ -122,7 +138,7 @@ Codex has not approved release, merge, deployment, validation completion, or lif
 ## Risks
 
 - Risk: No CI workflow enforces `pnpm validate`.
-  Release impact: Requires human acceptance for merge/release, or add CI before release.
+  Release impact: Requires human acceptance for release/deployment, or add CI before release.
 
 - Risk: No automated dependency/security audit.
   Release impact: Requires human acceptance for release, or add an audit gate before release.
@@ -134,15 +150,15 @@ Codex has not approved release, merge, deployment, validation completion, or lif
   Release impact: Requires human acceptance before product release if narrative quality is part of the release bar.
 
 - Risk: No production Cloudflare Pages project or deployment evidence is recorded.
-  Release impact: Blocks deployment approval, but does not block branch readiness for human merge review.
+  Release impact: Blocks deployment approval, but does not invalidate the completed human-approved merge.
 
 - Risk: Local-only saves can be cleared by the browser and are not cross-device.
   Release impact: Accepted by ADR for MVP; include in release notes or player-facing expectations if externally released.
 
 ## Rollback or Recovery
 
-- Merge rollback: Revert the merge commit or revert the implementation commit range on the target branch.
-- Branch recovery: Keep `codex/deep-vault-complete-game-mvp` isolated until human approval; do not merge if unresolved risks are unacceptable.
+- Merge rollback: This was a fast-forward merge, so there is no merge commit to revert. Practical rollback requires either reverting the implementation commit range on `main` or moving the branch ref back only after explicit human approval.
+- Branch recovery: `codex/deep-vault-complete-game-mvp` currently points at the merged MVP state. Keep the branch until the human decides whether it is still useful for audit or can be deleted.
 - Static deployment rollback: If deployed through Cloudflare Pages later, rollback by redeploying the previous Pages deployment or reverting the branch commit and rebuilding.
 - Data rollback: No server-side database, migration, account data, cloud save, telemetry, or external player data exists. Browser `localStorage` saves are local-only and versioned as `SAVE_VERSION = "1"`.
 
@@ -150,7 +166,7 @@ Codex has not approved release, merge, deployment, validation completion, or lif
 
 Ready with accepted risks
 
-The branch is ready for a human release decision if the human accepts the named risks around missing CI, missing dependency/security audit, and pending narrative playthrough review. It is not approved for merge, release, deployment, tag, or announcement until a human explicitly says so.
+The merged `main` state is ready for the next human release-readiness decision if the human accepts the named risks around missing CI, missing dependency/security audit, and pending narrative playthrough review. It is not approved for release, deployment, tag, or announcement until a human explicitly says so.
 
 ## Follow-Up
 
@@ -161,14 +177,14 @@ Release-blocking if required by the human:
 - Complete and record human narrative/playthrough review.
 - Confirm Cloudflare Pages project configuration before deployment.
 
-Can follow after human-approved merge/release:
+Can follow after human-approved merge:
 
 - Add richer prose variants and UI polish.
 - Add release notes or player-facing local-save caveat.
-- Add lifecycle retrospective after merge, deployment, or sustained playtest feedback.
+- Add lifecycle retrospective after deployment or sustained playtest feedback.
 
 ## Human Decision
 
-Pending
+Merge completed; release, deployment, tag, announcement, and lifecycle completion remain pending.
 
-Only a human may approve merge, release, deployment, tag, announcement, or lifecycle completion.
+Only a human may approve release, deployment, tag, announcement, or lifecycle completion.

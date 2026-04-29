@@ -49,8 +49,8 @@ Turn approved feature or story intent into a design that can be reviewed, valida
 9. Check execution readiness.
    Before finishing, verify that the design has enough detail for an ExecPlan or direct implementation. If not, record the missing decisions. Keep status as `Draft` unless the human explicitly approves the design and any related ADRs.
 
-10. Recommend subagent review when risk warrants it.
-   If the user explicitly asks for subagents, parallel review, or independent validation, use `architecture_decision_reviewer` to review architecture and ADR coverage, and use `validation_gate_reviewer` to review immediate and continuous validation gates. Use `product_coherence_reviewer` when there is concern that the design no longer preserves the source feature or story intent.
+10. Run required subagent review.
+   Before the human checkpoint, run `architecture_decision_reviewer` against the draft design and ADRs. Use `validation_gate_reviewer` for immediate and continuous validation gates. Use `product_coherence_reviewer` when product intent may drift, and `security_reviewer` when security, privacy, data, hosting, dependency, or permission decisions are involved. Record `Subagent Review Evidence` in the design and ADR artifacts. If a reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
 
 ## Architecture Guardrails
 
@@ -158,7 +158,7 @@ End solution-design work by asking the human to approve or revise:
 - Risks and assumptions
 - Immediate validation approach
 - Future CI/CD or continuous validation gates
-- Whether subagent review is needed before execution planning
+- Subagent review evidence and unresolved advisory findings before execution planning
 - Whether the design is ready for an ExecPlan or implementation
 
 Do not move to `spec/plans/`, `spec/validation/`, `tests/`, CI/CD configuration, or `src/` until this checkpoint is approved or the user explicitly asks to continue. When the design is approved and the next step is planning implementation, use the `execution-planning` skill.
@@ -176,4 +176,5 @@ When creating or updating solution design artifacts, provide:
 - A short summary of the design direction.
 - Key architecture decisions and tradeoffs.
 - Immediate and future lifecycle validation notes.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.

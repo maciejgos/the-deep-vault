@@ -25,7 +25,7 @@ function fixture(routeId: RouteId, routeChoiceId: string, finalChoiceId: string)
   return {
     id: `fixture.${routeId}`,
     routeId,
-    choiceIds: [...commonPath, routeChoiceId, "choice.d2.prepare-relay", "choice.d3.resolve-crisis", finalChoiceId]
+    choiceIds: [...commonPath, routeChoiceId, `choice.d2.prepare-relay-${routeId}`, "choice.d3.resolve-crisis", finalChoiceId]
   };
 }
 

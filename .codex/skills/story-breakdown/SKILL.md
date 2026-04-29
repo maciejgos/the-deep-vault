@@ -45,6 +45,9 @@ Turn a shaped feature into small, reviewable stories that can be implemented and
 8. Check implementation readiness.
    Before finishing, verify each story has clear user or agent value, scope, out-of-scope boundaries, acceptance criteria, implementation notes, and validation. Keep status as `Draft` unless the human explicitly approves the story.
 
+9. Run required subagent review.
+   Before the human checkpoint, run `product_coherence_reviewer` against the draft story set and record `Subagent Review Evidence` ledger entries in the story artifacts. If the reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
+
 ## Story Quality Bar
 
 An implementation-ready story should answer:
@@ -94,4 +97,5 @@ When creating or updating stories, provide:
 - The source feature file path and linked requirement file paths.
 - A short summary of the story sequence.
 - Any assumptions made.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.

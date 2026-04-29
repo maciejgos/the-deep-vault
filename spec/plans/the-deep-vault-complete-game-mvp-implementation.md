@@ -84,7 +84,7 @@ The implementation target is a static, client-side React application. There is n
 
 ## Context and Orientation
 
-This repository is currently a PDLC workspace for The Deep Vault. The product runtime does not exist yet. The implementation will instantiate the product under `src/`, add executable tests under `tests/` or beside source files, and introduce package manager and container tooling at the repository root.
+This repository now contains The Deep Vault browser MVP runtime under `src/`, executable tests under `tests/` and beside source files, and package manager plus container tooling at the repository root. The PDLC artifacts under `spec/` remain the source of truth for scope, rationale, validation, and follow-up work.
 
 The source requirement is `spec/requirements/the-deep-vault-text-rpg.md`. It defines a complete choice-based text RPG in Vault-9, starring Tomas Vale, with investigation, evidence, faction trust, resources, branching consequences, and four endings. The complete-game MVP feature is `spec/features/the-deep-vault-complete-game-mvp.md`. The accepted stories in `spec/stories/` cover the playthrough spine, menu choice scene flow, state consequences, evidence/codex/quest records, zone progression, faction and character arcs, side content consequences, route/ending evaluation, save/load continuity, and content-scope mapping.
 
@@ -97,7 +97,7 @@ The accepted architecture lives in `spec/design/the-deep-vault-mvp-game-architec
 - `spec/architecture-records/local-first-save-and-load-persistence.md`
 - `spec/architecture-records/cloudflare-pages-static-hosting-for-mvp.md`
 
-The implementation must respect the nested guidance in `src/AGENTS.md`, which says source-specific guidance belongs there once implementation begins.
+The implementation must respect the nested source guidance in `src/AGENTS.md` for The Deep Vault browser MVP.
 
 Plain-language definitions used in this plan:
 

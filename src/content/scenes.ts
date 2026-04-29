@@ -1,4 +1,4 @@
-import type { Choice, Effect, Scene, SceneId } from "../game";
+import type { Choice, Effect, RouteId, Scene, SceneId } from "../game";
 
 function choice(id: string, text: string, targetSceneId: SceneId, effects: Effect[] = []): Choice {
   return { id, text, targetSceneId, effects };
@@ -8,9 +8,51 @@ function sideChoice(id: string, text: string, sideQuestId: string, effects: Effe
   return {
     id,
     text,
+    conditions: [{ type: "not", condition: { type: "flagEquals", flag: `side.${sideQuestId}.done`, value: true } }],
     effects: [
+      { type: "setFlag", flag: `side.${sideQuestId}.done`, value: true },
       { type: "setSideQuestOutcome", sideQuestId, value: "resolved" },
       ...effects
+    ]
+  };
+}
+
+function sideResolution(id: string, text: string, sideQuestId: string, value: string, effects: Effect[] = []): Choice {
+  return {
+    id,
+    text,
+    conditions: [{ type: "not", condition: { type: "flagEquals", flag: `side.${sideQuestId}.done`, value: true } }],
+    effects: [
+      { type: "setFlag", flag: `side.${sideQuestId}.done`, value: true },
+      { type: "setSideQuestOutcome", sideQuestId, value },
+      { type: "updateQuest", questId: `quest.${sideQuestId}`, status: "completed" },
+      ...effects
+    ]
+  };
+}
+
+function routePreparationChoice(routeId: RouteId): Choice {
+  return {
+    id: `choice.d2.prepare-relay-${routeId}`,
+    text: "Prepare the relay core",
+    targetSceneId: `scene.d3.${routeId}`,
+    conditions: [{ type: "routeSelected", routeId }],
+    effects: [
+      { type: "updateQuest", questId: "quest.broadcast", status: "active" },
+      { type: "adjustStress", amount: 10 }
+    ]
+  };
+}
+
+function committedRouteChoice(id: string, text: string, routeId: RouteId): Choice {
+  return {
+    id,
+    text,
+    targetSceneId: "scene.ending.summary",
+    conditions: [{ type: "routeSelected", routeId }],
+    effects: [
+      { type: "setFinalRoute", routeId },
+      { type: "updateQuest", questId: "quest.broadcast", status: "completed" }
     ]
   };
 }
@@ -55,6 +97,12 @@ export const scenes: Record<string, Scene> = {
       "The diagnostic slate marks the pressure source as B-17, a level missing from every public map."
     ],
     [
+      choice("choice.a1.seal-leak", "Seal the main leak before reading the anomaly", "scene.a2.routine-questions", [
+        { type: "adjustFactionTrust", factionId: "mechanical", amount: 1 },
+        { type: "adjustPublicStability", amount: 1 },
+        { type: "adjustRouteTendency", routeId: "preserve-order", amount: 1 },
+        { type: "adjustStress", amount: 2 }
+      ]),
       choice("choice.a1.inspect-manifold", "Pull the raw B-17 sensor spool", "scene.a2.routine-questions", [
         { type: "setFlag", flag: "found_b17", value: true },
         { type: "addEvidence", evidenceId: "evidence.found-b17" },
@@ -63,6 +111,13 @@ export const scenes: Record<string, Scene> = {
         { type: "adjustFactionTrust", factionId: "mechanical", amount: 1 },
         { type: "adjustRouteTendency", routeId: "full-exposure", amount: 1 },
         { type: "adjustStress", amount: 8 }
+      ]),
+      choice("choice.a1.call-central", "Call central maintenance and log the breach", "scene.a2.routine-questions", [
+        { type: "setFlag", flag: "security_awareness", value: 1 },
+        { type: "adjustFactionTrust", factionId: "stability", amount: 1 },
+        { type: "adjustPublicStability", amount: 1 },
+        { type: "adjustRouteTendency", routeId: "preserve-order", amount: 1 },
+        { type: "adjustStress", amount: 4 }
       ])
     ]
   ),
@@ -73,10 +128,23 @@ export const scenes: Record<string, Scene> = {
     "location.stability-interview",
     ["Tovin Reed asks why a routine runner copied a pressure log before reporting the breach."],
     [
+      choice("choice.a2.deny-voice", "Report only the damaged line", "scene.a3.shift-end-market", [
+        { type: "setCharacterState", characterId: "tovin", value: "watching" },
+        { type: "adjustFactionTrust", factionId: "stability", amount: 1 },
+        { type: "setClearance", value: 1 },
+        { type: "adjustRouteTendency", routeId: "preserve-order", amount: 1 }
+      ]),
       choice("choice.a2.partial-truth", "Give Tovin enough truth to create doubt", "scene.a3.shift-end-market", [
         { type: "setCharacterState", characterId: "tovin", value: "doubtful" },
         { type: "adjustFactionTrust", factionId: "stability", amount: 1 },
         { type: "setClearance", value: 1 }
+      ]),
+      choice("choice.a2.name-b17", "Ask why B-17 has live wiring", "scene.a3.shift-end-market", [
+        { type: "setFlag", flag: "security_awareness", value: 2 },
+        { type: "setCharacterState", characterId: "tovin", value: "alarmed" },
+        { type: "adjustPublicStability", amount: -2 },
+        { type: "adjustRouteTendency", routeId: "full-exposure", amount: 1 },
+        { type: "adjustStress", amount: 4 }
       ])
     ]
   ),
@@ -87,10 +155,21 @@ export const scenes: Record<string, Scene> = {
     "location.mid-commons-market",
     ["The market trades in ration cards, rumors, and people who remember Mira Senn asking the same questions."],
     [
-      sideChoice("choice.side.jun-books", "Recruit Jun through the double books", "side.juns-double-books", [
-        { type: "updateQuest", questId: "quest.side.juns-double-books", status: "completed" },
+      sideResolution("choice.side.jun-recruit", "Recruit Jun through the double books", "side.juns-double-books", "recruited", [
         { type: "acquireItem", itemId: "item.contraband-map-scrap" },
-        { type: "adjustSupplies", amount: 2 }
+        { type: "setCharacterState", characterId: "jun", value: "recruited" },
+        { type: "adjustSupplies", amount: 2 },
+        { type: "adjustRouteTendency", routeId: "exit-protocol", amount: 1 }
+      ]),
+      sideResolution("choice.side.jun-expose", "Expose Jun's double books to Tovin", "side.juns-double-books", "exposed", [
+        { type: "setCharacterState", characterId: "jun", value: "exposed" },
+        { type: "adjustFactionTrust", factionId: "stability", amount: 1 },
+        { type: "adjustRouteTendency", routeId: "preserve-order", amount: 1 },
+        { type: "adjustSupplies", amount: -1 }
+      ]),
+      sideResolution("choice.side.jun-ignore", "Leave Jun's books alone", "side.juns-double-books", "ignored", [
+        { type: "setCharacterState", characterId: "jun", value: "ignored" },
+        { type: "adjustStress", amount: -1 }
       ]),
       choice("choice.a3.follow-mira", "Follow Mira's market trail", "scene.a4.ash-in-furnace")
     ]
@@ -102,10 +181,16 @@ export const scenes: Record<string, Scene> = {
     "location.education-incinerator",
     ["Sister Ilya hides forbidden schematics in lesson ash and asks whether Tomas wants proof or safety."],
     [
-      sideChoice("choice.side.broken-lesson", "Protect Ilya's broken lesson", "side.broken-lesson", [
-        { type: "updateQuest", questId: "quest.side.broken-lesson", status: "completed" },
+      sideResolution("choice.side.broken-lesson-protect", "Protect Ilya's broken lesson", "side.broken-lesson", "protected", [
         { type: "adjustFactionTrust", factionId: "keepers", amount: 1 },
-        { type: "setCharacterState", characterId: "ilya", value: "protected" }
+        { type: "setCharacterState", characterId: "ilya", value: "protected" },
+        { type: "adjustRouteTendency", routeId: "controlled-truth", amount: 1 }
+      ]),
+      sideResolution("choice.side.broken-lesson-report", "Report the forbidden lesson", "side.broken-lesson", "reported", [
+        { type: "adjustFactionTrust", factionId: "stability", amount: 1 },
+        { type: "setCharacterState", characterId: "ilya", value: "reported" },
+        { type: "adjustRouteTendency", routeId: "preserve-order", amount: 1 },
+        { type: "adjustPublicStability", amount: 1 }
       ]),
       choice("choice.a4.take-schematics", "Take the paper schematics", "scene.a5.missing-shift", [
         { type: "setFlag", flag: "paper_schematics", value: true },
@@ -358,22 +443,78 @@ export const scenes: Record<string, Scene> = {
     "location.final-relay-core",
     ["The relay core accepts the cipher. Every route now has a mission and a cost."],
     [
-      choice("choice.d2.prepare-relay", "Prepare the relay core", "scene.d3.crisis-variants", [
-        { type: "updateQuest", questId: "quest.broadcast", status: "active" },
-        { type: "adjustStress", amount: 10 }
-      ])
+      routePreparationChoice("controlled-truth"),
+      routePreparationChoice("full-exposure"),
+      routePreparationChoice("preserve-order"),
+      routePreparationChoice("exit-protocol")
     ]
   ),
-  "scene.d3.crisis-variants": scene(
-    "scene.d3.crisis-variants",
-    "D3. Crisis Scene Variants",
+  "scene.d3.controlled-truth": scene(
+    "scene.d3.controlled-truth",
+    "D3. Controlled Truth Crisis",
     "Crisis",
     "location.final-relay-core",
-    ["Crowds surge, pumps cough, and allies hold their assigned lines as the route consequences come due."],
+    [
+      "Nera's archive packet enters civic channels in measured fragments while Mechanics hold ration lines open.",
+      "Cael's people push for more, but every ally Tomas kept alive buys another minute of calm."
+    ],
     [
       choice("choice.d3.resolve-crisis", "Spend the last resources to keep the route viable", "scene.d4.final-choice-terminal", [
         { type: "adjustSupplies", amount: -1 },
-        { type: "adjustPublicStability", amount: -3 }
+        { type: "adjustPublicStability", amount: 1 },
+        { type: "adjustRouteTendency", routeId: "controlled-truth", amount: 1 }
+      ])
+    ]
+  ),
+  "scene.d3.full-exposure": scene(
+    "scene.d3.full-exposure",
+    "D3. Full Exposure Crisis",
+    "Crisis",
+    "location.final-relay-core",
+    [
+      "Raw records flood the lower speakers first. Crowds surge toward sealed stairs before Stability can name the breach.",
+      "The Descenders open routes fast enough to save lives and rough enough to start fires."
+    ],
+    [
+      choice("choice.d3.resolve-crisis", "Spend the last resources to keep the route viable", "scene.d4.final-choice-terminal", [
+        { type: "adjustSupplies", amount: -1 },
+        { type: "adjustPublicStability", amount: -5 },
+        { type: "adjustRouteTendency", routeId: "full-exposure", amount: 1 }
+      ])
+    ]
+  ),
+  "scene.d3.preserve-order": scene(
+    "scene.d3.preserve-order",
+    "D3. Preserve Order Crisis",
+    "Crisis",
+    "location.final-relay-core",
+    [
+      "Voss's continuity message rolls across public screens while patrols seal the Black Stair behind Tomas.",
+      "The lights stay steady. The records do not."
+    ],
+    [
+      choice("choice.d3.resolve-crisis", "Spend the last resources to keep the route viable", "scene.d4.final-choice-terminal", [
+        { type: "adjustSupplies", amount: -1 },
+        { type: "adjustPublicStability", amount: 3 },
+        { type: "adjustRouteTendency", routeId: "preserve-order", amount: 1 },
+        { type: "setCharacterState", characterId: "voss", value: "shielded" }
+      ])
+    ]
+  ),
+  "scene.d3.exit-protocol": scene(
+    "scene.d3.exit-protocol",
+    "D3. Exit Protocol Crisis",
+    "Crisis",
+    "location.final-relay-core",
+    [
+      "Alma routes power away from every familiar argument and into a boundary node the public maps never named.",
+      "For one terrible minute, Vault-9 must survive without knowing whether Tomas is opening a door or a wound."
+    ],
+    [
+      choice("choice.d3.resolve-crisis", "Spend the last resources to keep the route viable", "scene.d4.final-choice-terminal", [
+        { type: "adjustSupplies", amount: -2 },
+        { type: "adjustPublicStability", amount: -2 },
+        { type: "adjustRouteTendency", routeId: "exit-protocol", amount: 1 }
       ])
     ]
   ),
@@ -384,22 +525,10 @@ export const scenes: Record<string, Scene> = {
     "location.final-relay-core",
     ["The terminal asks for the last irreversible confirmation. Tomas sees all four costs, even the one already chosen."],
     [
-      choice("choice.d4.execute-controlled-truth", "Execute controlled truth", "scene.ending.summary", [
-        { type: "setFinalRoute", routeId: "controlled-truth" },
-        { type: "updateQuest", questId: "quest.broadcast", status: "completed" }
-      ]),
-      choice("choice.d4.execute-full-exposure", "Execute full exposure", "scene.ending.summary", [
-        { type: "setFinalRoute", routeId: "full-exposure" },
-        { type: "updateQuest", questId: "quest.broadcast", status: "completed" }
-      ]),
-      choice("choice.d4.execute-preserve-order", "Execute preserve order", "scene.ending.summary", [
-        { type: "setFinalRoute", routeId: "preserve-order" },
-        { type: "updateQuest", questId: "quest.broadcast", status: "completed" }
-      ]),
-      choice("choice.d4.execute-exit-protocol", "Execute exit protocol", "scene.ending.summary", [
-        { type: "setFinalRoute", routeId: "exit-protocol" },
-        { type: "updateQuest", questId: "quest.broadcast", status: "completed" }
-      ])
+      committedRouteChoice("choice.d4.execute-controlled-truth", "Execute controlled truth", "controlled-truth"),
+      committedRouteChoice("choice.d4.execute-full-exposure", "Execute full exposure", "full-exposure"),
+      committedRouteChoice("choice.d4.execute-preserve-order", "Execute preserve order", "preserve-order"),
+      committedRouteChoice("choice.d4.execute-exit-protocol", "Execute exit protocol", "exit-protocol")
     ]
   ),
   "scene.ending.summary": scene(

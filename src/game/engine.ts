@@ -1,8 +1,10 @@
 import { evaluateConditions } from "./conditions";
-import { applyEffects, moveToScene } from "./effects";
+import { applyEffect, moveToScene } from "./effects";
 import { createInitialState } from "./initialState";
 import { getCurrentScene } from "./selectors";
-import type { ChoiceId, GameContent, GameState } from "./types";
+import type { ChoiceId, Effect, GameContent, GameState, SceneId } from "./types";
+
+const MAX_SCENE_TRANSITIONS = 100;
 
 export function startNewGame(content: GameContent): GameState {
   const initialState = createInitialState(content.startSceneId);
@@ -12,7 +14,7 @@ export function startNewGame(content: GameContent): GameState {
     throw new Error(`Start scene does not exist: ${content.startSceneId}`);
   }
 
-  return applyEffects(initialState, startScene.entryEffects, startScene.id);
+  return applyContentEffects(content, initialState, startScene.entryEffects, new Set([startScene.id]));
 }
 
 export function applyChoice(content: GameContent, state: GameState, choiceId: ChoiceId): GameState {
@@ -32,16 +34,57 @@ export function applyChoice(content: GameContent, state: GameState, choiceId: Ch
     selectedChoices: [...state.selectedChoices, { sceneId: scene.id, choiceId: choice.id }]
   };
 
-  nextState = applyEffects(nextState, choice.effects, scene.id);
+  const transitionTrail = new Set<SceneId>([scene.id]);
 
-  if (choice.targetSceneId) {
-    if (!content.scenes[choice.targetSceneId]) {
-      throw new Error(`Choice ${choiceId} targets missing scene: ${choice.targetSceneId}`);
-    }
+  nextState = applyContentEffects(content, nextState, choice.effects, transitionTrail);
 
-    nextState = moveToScene(nextState, choice.targetSceneId);
-    nextState = applyEffects(nextState, content.scenes[choice.targetSceneId]?.entryEffects, choice.targetSceneId);
+  if (choice.targetSceneId && nextState.currentSceneId !== choice.targetSceneId) {
+    nextState = transitionToScene(content, nextState, choice.targetSceneId, transitionTrail);
   }
 
   return nextState;
+}
+
+function applyContentEffects(
+  content: GameContent,
+  state: GameState,
+  effects: Effect[] | undefined,
+  transitionTrail = new Set<SceneId>()
+): GameState {
+  return (
+    effects?.reduce((nextState, effect) => {
+      if (effect.type === "moveToScene") {
+        return transitionToScene(content, nextState, effect.sceneId, transitionTrail);
+      }
+
+      return applyEffect(nextState, effect);
+    }, state) ?? state
+  );
+}
+
+function transitionToScene(
+  content: GameContent,
+  state: GameState,
+  sceneId: SceneId,
+  transitionTrail = new Set<SceneId>()
+): GameState {
+  const targetScene = content.scenes[sceneId];
+
+  if (!targetScene) {
+    throw new Error(`Transition targets missing scene: ${sceneId}`);
+  }
+
+  if (transitionTrail.has(sceneId)) {
+    throw new Error(`Scene transition cycle detected: ${sceneId}`);
+  }
+
+  if (transitionTrail.size > MAX_SCENE_TRANSITIONS) {
+    throw new Error(`Scene transition chain exceeded ${MAX_SCENE_TRANSITIONS} transitions`);
+  }
+
+  transitionTrail.add(sceneId);
+
+  const movedState = moveToScene(state, sceneId);
+
+  return applyContentEffects(content, movedState, targetScene.entryEffects, transitionTrail);
 }

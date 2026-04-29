@@ -61,8 +61,8 @@ Execute an approved ExecPlan with discipline. This skill turns an implementation
 11. Handle drift.
    If implementation reveals a missing requirement, feature scope change, story change, design decision, ADR need, or new validation gate, stop and recommend returning to the appropriate earlier PDLC skill. Do not silently widen scope.
 
-12. Recommend subagent review when risk warrants it.
-   If the user explicitly asks for subagents, parallel review, or independent validation, use `implementation_reviewer` to review the changes against the approved ExecPlan and acceptance criteria. Use `architecture_decision_reviewer` for design and architecture drift, `security_reviewer` for security-sensitive changes, `quality_gate_reviewer` for code quality and maintainability, `validation_gate_reviewer` for validation and CI/CD gate readiness, and `product_coherence_reviewer` for product intent drift.
+12. Run required subagent review.
+   Before the human checkpoint, run `implementation_reviewer`, `security_reviewer`, and `quality_gate_reviewer` against the implementation diff and linked ExecPlan. Use `architecture_decision_reviewer` for design or architecture drift, `validation_gate_reviewer` for validation and CI/CD gate readiness, and `product_coherence_reviewer` for product intent drift. Record findings in the ExecPlan `Subagent Review Checkpoints` section or the relevant validation artifact. If a reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
 
 ## Implementation Quality Bar
 
@@ -119,5 +119,6 @@ When completing an implementation pass, provide:
 - Validation commands or manual checks and results.
 - Playwright checks and screenshots when applicable.
 - Design, security, quality, and validation gate review notes.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - Deviations, risks, or follow-up work.
 - The human approval checkpoint and recommended next action.

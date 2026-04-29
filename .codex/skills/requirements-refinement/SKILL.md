@@ -39,6 +39,9 @@ Turn uncertain product intent into a clear requirement that a human can review a
 6. Check readiness.
    Before finishing, verify that the requirement has enough information to shape features. If not, summarize what is missing and mark the requirement as `Draft`. If it is ready for human review, keep the status as `Draft` unless the user explicitly approves it.
 
+7. Run required subagent review.
+   Before the human checkpoint, run `product_coherence_reviewer` against the draft requirement and record a `Subagent Review Evidence` ledger entry in the artifact. If the reviewer cannot run, record the reason, confidence impact, unresolved risk, and whether explicit human approval is needed to proceed despite missing advisory review.
+
 ## Requirement Quality Bar
 
 A refined requirement should answer:
@@ -74,4 +77,5 @@ When creating or updating a requirement, provide:
 - The requirement file path.
 - A short summary of the refined requirement.
 - Any assumptions made.
+- Subagent reviewer names, evidence path, unresolved gaps, and human decision state.
 - The human approval checkpoint and recommended next action.
