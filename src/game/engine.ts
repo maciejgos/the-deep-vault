@@ -57,7 +57,7 @@ function applyContentEffects(
         return transitionToScene(content, nextState, effect.sceneId, transitionTrail);
       }
 
-      return applyEffect(nextState, effect, nextState.currentSceneId);
+      return applyEffect(nextState, effect);
     }, state) ?? state
   );
 }

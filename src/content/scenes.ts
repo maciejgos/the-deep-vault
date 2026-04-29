@@ -17,7 +17,7 @@ function sideChoice(id: string, text: string, sideQuestId: string, effects: Effe
   };
 }
 
-function sideResolution(id: string, text: string, sideQuestId: string, value: string, effects: Effect[]): Choice {
+function sideResolution(id: string, text: string, sideQuestId: string, value: string, effects: Effect[] = []): Choice {
   return {
     id,
     text,
