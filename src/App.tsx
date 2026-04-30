@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChoiceList } from "./components/ChoiceList";
 import { EndingView } from "./components/EndingView";
+import { MusicControls } from "./components/MusicControls";
 import { RecordsPanel } from "./components/RecordsPanel";
 import { RoutePressure } from "./components/RoutePressure";
 import { SaveLoadControls } from "./components/SaveLoadControls";
@@ -109,6 +110,7 @@ export function App() {
           </div>
         </section>
       )}
+      <MusicControls />
       <p className="version-badge" aria-label="Game version">
         v{__APP_VERSION__}
       </p>
