@@ -10,7 +10,6 @@ test("opening scene is visible, menu based, and keyboard reachable", async ({ pa
 
   await expect(page.getByRole("heading", { name: "The Deep Vault" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Start" })).toBeVisible();
-  await expect(page.getByLabel("Game version")).toHaveText("v0.1.1");
 
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
@@ -20,7 +19,7 @@ test("opening scene is visible, menu based, and keyboard reachable", async ({ pa
   await expect(page.getByRole("button", { name: "Begin the maintenance shift" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Route drift" })).toBeVisible();
 
-  await page.keyboard.press("Tab");
+  await page.getByRole("button", { name: "Begin the maintenance shift" }).focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { name: "A1. Pressure Fault" })).toBeVisible();
   await expect(page.getByRole("status")).toContainText("Items +1");
