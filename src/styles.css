@@ -883,3 +883,61 @@ h1 {
     margin-top: 14px;
   }
 }
+
+
+
+.music-controls {
+  position: fixed;
+  right: 20px;
+  bottom: 52px;
+  z-index: 3;
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+}
+
+.music-toggle {
+  border: 1px solid rgba(123, 215, 188, 0.6);
+  background: rgba(8, 16, 14, 0.86);
+  color: #d8f7eb;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.music-toggle:hover {
+  border-color: rgba(255, 230, 154, 0.82);
+  color: #fff3ca;
+}
+
+.music-toggle[aria-pressed="true"] {
+  box-shadow: 0 0 16px rgba(123, 215, 188, 0.32);
+}
+
+.music-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(123, 215, 188, 0.35);
+  background: rgba(8, 16, 14, 0.82);
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.music-volume input {
+  accent-color: #7bd7bc;
+}
+
+.music-unsupported {
+  position: fixed;
+  right: 20px;
+  bottom: 56px;
+  z-index: 3;
+  margin: 0;
+  color: #fff3ca;
+  font-size: 0.75rem;
+}

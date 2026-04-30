@@ -1,6 +1,6 @@
 {
   "name": "the-deep-vault",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.0",
@@ -49,6 +49,8 @@
     "vitest": "^4.1.4"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
