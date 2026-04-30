@@ -29,8 +29,14 @@ const fullExposurePath = [
 ];
 
 describe("App", () => {
-  it("starts on the playable opening scene", () => {
+  it("starts on the animated landing screen and enters the opening scene", async () => {
+    const user = userEvent.setup();
     render(<App />);
+
+    expect(screen.getByRole("heading", { name: "The Deep Vault" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Start" }));
 
     expect(screen.getByRole("heading", { name: "P1. Survival Notice" })).toBeInTheDocument();
     expect(screen.getByText(/Tomas Vale/)).toBeInTheDocument();
@@ -47,6 +53,8 @@ describe("App", () => {
   it("plays the full-exposure MVP route and shows records", async () => {
     const user = userEvent.setup();
     render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Start" }));
 
     for (const choiceName of fullExposurePath) {
       await user.click(screen.getByRole("button", { name: choiceName }));
@@ -70,6 +78,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await user.click(screen.getByRole("button", { name: "Start" }));
     await user.click(screen.getByRole("button", { name: "Begin the maintenance shift" }));
     expect(screen.getByRole("heading", { name: "A1. Pressure Fault" })).toBeInTheDocument();
 

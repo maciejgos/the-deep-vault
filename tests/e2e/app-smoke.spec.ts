@@ -8,10 +8,16 @@ const choiceTextById = new Map(
 test("opening scene is visible, menu based, and keyboard reachable", async ({ page }) => {
   await page.goto("/");
 
+  await expect(page.getByRole("heading", { name: "The Deep Vault" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start" })).toBeVisible();
+  await expect(page.getByLabel("Game version")).toHaveText("v0.1.1");
+
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+
   await expect(page.getByRole("heading", { name: "P1. Survival Notice" })).toBeVisible();
   await expect(page.getByText(/Tomas Vale/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Begin the maintenance shift" })).toBeVisible();
-  await expect(page.getByLabel("Game version")).toHaveText("v0.1.0");
   await expect(page.getByRole("heading", { name: "Route drift" })).toBeVisible();
 
   await page.keyboard.press("Tab");
@@ -23,6 +29,7 @@ test("opening scene is visible, menu based, and keyboard reachable", async ({ pa
 for (const fixture of Object.values(gameContent.routeFixtures)) {
   test(`${fixture.routeId} route reaches matching ending`, async ({ page }, testInfo) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Start" }).click();
     await playFixture(page, fixture.choiceIds);
 
     await expect(page.getByRole("heading", { name: "Ending Summary" })).toBeVisible();
@@ -48,11 +55,13 @@ test("browser save/load resumes a route and preserves records", async ({ page })
   const midpoint = Math.floor(fixture.choiceIds.length / 2);
 
   await page.goto("/");
+  await page.getByRole("button", { name: "Start" }).click();
   await playFixture(page, fixture.choiceIds.slice(0, midpoint));
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByRole("status")).toContainText("Game saved.");
 
   await page.reload();
+  await page.getByRole("button", { name: "Start" }).click();
   await page.getByRole("button", { name: "Load" }).click();
   await expect(page.getByRole("status")).toContainText("Game loaded.");
 
