@@ -11,6 +11,7 @@ test("opening scene is visible, menu based, and keyboard reachable", async ({ pa
   await expect(page.getByRole("heading", { name: "P1. Survival Notice" })).toBeVisible();
   await expect(page.getByText(/Tomas Vale/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Begin the maintenance shift" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start ambience" })).toBeVisible();
   await expect(page.getByLabel("Game version")).toHaveText("v0.1.0");
   await expect(page.getByRole("heading", { name: "Route drift" })).toBeVisible();
 

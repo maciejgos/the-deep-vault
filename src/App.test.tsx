@@ -35,6 +35,8 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "P1. Survival Notice" })).toBeInTheDocument();
     expect(screen.getByText(/Tomas Vale/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Begin the maintenance shift" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start ambience" })).toBeDisabled();
+    expect(screen.getByText("Audio unavailable.")).toBeInTheDocument();
     expect(screen.getByText("Survival Doctrine")).toBeInTheDocument();
 
     const records = screen.getByRole("complementary", { name: "Records" });

@@ -46,6 +46,7 @@ button {
 .scene-panel,
 .records-panel,
 .save-controls,
+.audio-control,
 .status-summary,
 .ending-panel,
 .route-pressure {
@@ -72,6 +73,7 @@ button {
 
 .records-panel,
 .save-controls,
+.audio-control,
 .ending-panel,
 .route-pressure {
   padding: 16px;
@@ -136,6 +138,77 @@ button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1px;
   overflow: hidden;
+}
+
+.audio-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border-color: rgba(123, 215, 188, 0.34);
+  background:
+    linear-gradient(135deg, rgba(21, 54, 50, 0.92), rgba(15, 21, 19, 0.94)),
+    rgba(13, 19, 17, 0.92);
+}
+
+.audio-control label {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr);
+  gap: 10px;
+  align-items: center;
+  color: #b7d7c0;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.audio-control input[type="range"] {
+  width: 100%;
+  accent-color: #ffe69a;
+}
+
+.audio-control h2 {
+  margin: 0 0 4px;
+  color: #d9f3e6;
+  font-size: 0.95rem;
+}
+
+.audio-control p {
+  margin: 0;
+  color: #a9cdbd;
+  font-size: 0.86rem;
+}
+
+.audio-control button {
+  min-width: 128px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid rgba(245, 247, 244, 0.35);
+  border-radius: 8px;
+  color: #f5f7f4;
+  background: #243f37;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+}
+
+.audio-control button:hover,
+.audio-control button:focus-visible {
+  border-color: rgba(255, 230, 154, 0.82);
+  background: #315746;
+  outline: 2px solid rgba(255, 235, 155, 0.82);
+  outline-offset: 2px;
+  transform: translateY(-1px);
+}
+
+.audio-control button:disabled {
+  border-color: rgba(213, 226, 201, 0.16);
+  color: rgba(213, 226, 201, 0.52);
+  background: rgba(25, 32, 29, 0.82);
+  cursor: not-allowed;
+  transform: none;
 }
 
 .status-summary div {

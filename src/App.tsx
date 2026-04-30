@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AmbientAudioControl } from "./components/AmbientAudioControl";
 import { ChoiceList } from "./components/ChoiceList";
 import { EndingView } from "./components/EndingView";
 import { RecordsPanel } from "./components/RecordsPanel";
@@ -61,6 +62,7 @@ export function App() {
           <EndingView content={gameContent} endingResult={endingResult} state={state} />
         </div>
         <div className="side-panel">
+          <AmbientAudioControl sceneId={scene.id} />
           <StatusSummary state={state} />
           <RoutePressure endingResult={endingResult} />
           <SaveLoadControls feedback={feedback} onNewGame={newGame} onSave={save} onLoad={load} />
