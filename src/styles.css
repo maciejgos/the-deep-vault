@@ -261,9 +261,7 @@ button {
   transition:
     transform 160ms ease,
     outline-color 160ms ease;
-  animation:
-    start-pulse 1.9s ease-in-out infinite,
-    start-float 4.8s ease-in-out infinite;
+  animation: start-pulse 1.9s ease-in-out infinite;
 }
 
 .start-button::before,
@@ -739,17 +737,6 @@ h1 {
       0 0 0 18px rgba(123, 215, 188, 0.08),
       0 0 70px rgba(255, 230, 154, 0.48),
       0 28px 80px rgba(0, 0, 0, 0.54);
-  }
-}
-
-@keyframes start-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-7px);
   }
 }
 
